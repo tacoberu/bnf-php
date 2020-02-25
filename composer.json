@@ -1,0 +1,23 @@
+{
+	"name": "tacoberu/bnf",
+	"description": "Framework for building BNF like parsers.",
+	"authors": [
+		{
+			"name": "Martin Takáč",
+			"email": "martin@takac.name"
+		}
+	],
+	"type": "library",
+	"license": "MIT",
+	"keywords":  ["parser", "bnf", "abnf", "ebnf", "lexer", "tokenizer", "ast"],
+	"require": {
+		"php" : ">=5.3.3"
+	},
+    "require-dev": {
+		"phpunit/phpunit": "~7.0",
+        "tracy/tracy": "^2.0"
+    },
+	"autoload": {
+		"classmap": ["libs"]
+	}
+}
