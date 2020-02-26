@@ -1,0 +1,109 @@
+<?php
+/**
+ * Copyright (c) since 2004 Martin Takáč
+ * @author Martin Takáč <martin@takac.name>
+ */
+
+namespace Taco\BNF;
+
+use LogicException;
+use Taco\BNF\Combinators\Variants;
+
+
+class Parser
+{
+
+	private $schema;
+
+
+
+	function __construct($schema)
+	{
+		if (is_array($schema)) {
+			$schema = new Variants(Null, $schema);
+		}
+		$this->schema = $schema;
+	}
+
+
+
+	/**
+	 * @param string
+	 * @return array of {name: string, content: string|array, start: int, end: int}
+	 */
+	function parse($src)
+	{
+		list($node, $expected) = $this->schema->scan($src, 0, []);
+		if ($node) {
+			if ($node->end < strlen($src)) {
+				throw self::fail($src, $node->end, $expected);
+			}
+			return $node;
+		}
+		throw self::fail($src, 0, $expected);
+	}
+
+
+
+	private static function fail($src, $offset, array $expectedTokens)
+	{
+		list($line, $col) = self::calculateCoordinates($src, $offset);
+
+		// přidá jeden předchozí řádek
+		$from = strrpos(substr($src, 0, $offset), "\n");
+		if ($from > 10) {
+			$from -= 10;
+		}
+		$from = strrpos(substr($src, 0, $from), "\n");
+		$first = $line - substr_count(substr($src, $from, $offset), "\n");
+
+		// Fragment kodu s chybou a pěkně očíslované řádky.
+		$context = self::formatContext(substr($src, $from, 255 * 8), $first, $line, $col);
+		if (empty($expectedTokens)) {
+			return new LogicException("Unexpected content on line $line, column $col\n{$context}\n");
+		}
+		elseif (count($expectedTokens) > 1) {
+			$last = array_pop($expectedTokens);
+			$first = implode('\', \'', $expectedTokens);
+			$expected = "expected token '$first' or '$last'";
+		}
+		else {
+			$tokenname = key($expectedTokens);
+			$expected = 'expected token \'' . $tokenname . '\'';
+		}
+		return new LogicException("Unexpected token on line $line, column $col: $expected\n{$context}\n");
+	}
+
+
+
+	/**
+	 * Returns position of token in input string.
+	 * @return array of [line, column]
+	 */
+	private static function calculateCoordinates($src, $offset)
+	{
+		$src = substr($src, 0, $offset);
+		return [
+			substr_count($src, "\n") + 1,
+			$offset - strrpos("\n" . $src, "\n") + 1
+		];
+	}
+
+
+
+	private static function formatContext($src, $first, $line, $col)
+	{
+		$xs = [];
+		foreach (explode("\n", $src) as $i => $x) {
+			$xs[] = sprintf('%' . (strlen($first) + 1) . 'd > %s', $first + $i, $x);
+			if ($first + $i == $line) {
+				$xs[] = sprintf('%' . ((strlen($first) + 1) + $col + 3) . 's', '---^'); // ———
+			}
+		}
+		if (count($xs) > 20) {
+			$xs = array_slice($xs, 0, 20);
+		}
+		return implode("\n", $xs);
+	}
+
+}
