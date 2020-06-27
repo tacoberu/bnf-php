@@ -1,5 +1,8 @@
-A PHP BNF like parser
-=====================
+A PHP BNF like parser [![Build Status][travisimage]][travislink]
+================================================================
+
+[travisimage]: https://travis-ci.org/tacoberu/bnf-php.svg?branch=master
+[travislink]: https://travis-ci.org/tacoberu/bnf-php
 
 This is a PHP implementation of BNF like parser.
 
