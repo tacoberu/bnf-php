@@ -42,28 +42,65 @@ class ParserTest extends TestCase
 
 
 
-	function _testFail1()
+	function testFail1()
 	{
 		$parser = new Parser([
 			new Pattern(Null, ['~\s+~'], False),
 			new Pattern('element', ['~[a-z]+~']),
 		]);
 		$src = "123456";
-		$ast = $parser->parse($src);
-		$this->assertSame($src, (string) $ast);
+		try {
+			$parser->parse($src);
+			$this->fail('Expected exception.');
+		}
+		catch (ParseException $e) {
+			$this->assertEquals('Unexpected token on line 1, column 1: expected token \'element\'', $e->getMessage());
+			$this->assertEquals(1, $e->getContentLine());
+			$this->assertEquals(1, $e->getContentColumn());
+			$this->assertEquals(['element'], $e->getExpectedTokens());
+			$this->assertEquals(' 1 > 123456
+  ---^', $e->getContextSource());
+		}
 	}
 
 
 
-	function _testFail2()
+	function testFail2()
 	{
 		$parser = new Parser([
 			new Pattern(Null, ['~\s+~'], False),
 			new Pattern('element', ['~[a-z]+~']),
 		]);
 		$src = "abc 123456";
-		$ast = $parser->parse($src);
-		$this->assertSame($src, (string) $ast);
+		try {
+			$parser->parse($src);
+			$this->fail('Expected exception.');
+		}
+		catch (ParseException $e) {
+			$this->assertEquals('Unexpected token on line 1, column 5: expected token \'element\'', $e->getMessage());
+			$this->assertEquals(1, $e->getContentLine());
+			$this->assertEquals(5, $e->getContentColumn());
+			$this->assertEquals(['element'], $e->getExpectedTokens());
+			$this->assertEquals(' 1 > abc 123456
+      ---^', $e->getContextSource());
+		}
+	}
+
+
+
+	function testFail3()
+	{
+		$parser = new Parser([
+			new Pattern(Null, ['~\s+~'], False),
+			new Pattern('element', ['~[a-z]+~']),
+		]);
+		try {
+			$parser->parse('');
+			$this->fail('Expected exception.');
+		}
+		catch (ParseException $e) {
+			$this->assertEquals('Empty content.', $e->getMessage());
+		}
 	}
 
 

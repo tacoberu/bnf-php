@@ -6,7 +6,6 @@
 
 namespace Taco\BNF;
 
-use LogicException;
 use Taco\BNF\Combinators\Variants;
 
 
@@ -33,6 +32,9 @@ class Parser
 	 */
 	function parse($src)
 	{
+		if (empty($src)) {
+			throw ParseException::emptyContent();
+		}
 		list($node, $expected) = $this->schema->scan($src, 0, []);
 		if ($node) {
 			if ($node->end < strlen($src)) {
@@ -56,22 +58,8 @@ class Parser
 		}
 		$from = strrpos(substr($src, 0, $from), "\n");
 		$first = $line - substr_count(substr($src, $from, $offset), "\n");
-
-		// Fragment kodu s chybou a pěkně očíslované řádky.
-		$context = self::formatContext(substr($src, $from, 255 * 8), $first, $line, $col);
-		if (empty($expectedTokens)) {
-			return new LogicException("Unexpected content on line $line, column $col\n{$context}\n");
-		}
-		elseif (count($expectedTokens) > 1) {
-			$last = array_pop($expectedTokens);
-			$first = implode('\', \'', $expectedTokens);
-			$expected = "expected token '$first' or '$last'";
-		}
-		else {
-			$tokenname = key($expectedTokens);
-			$expected = 'expected token \'' . $tokenname . '\'';
-		}
-		return new LogicException("Unexpected token on line $line, column $col: $expected\n{$context}\n");
+		return ParseException::unexpectedToken($line, $col, $expectedTokens
+			, self::formatContext(substr($src, $from, 255 * 8), $first, $line, $col));
 	}
 
 
