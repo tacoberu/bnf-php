@@ -87,7 +87,6 @@ class Variants implements Combinator
 			$offset = $token->end;
 		}
 
-//~ $res2 = $res;
 		// Poslední odebereme a nahradíme podle vzoru $last. Odebrat můžem i více, protože více jich může neodpovídat $last.
 		while (count($res)) {
 			// Odstranit poslední.
@@ -101,7 +100,6 @@ class Variants implements Combinator
 			}
 		}
 
-//~ dump(['@' . __method__ . ':' . __line__, $expected]);
 		if (empty($res)) {
 			// Získali jsme jen jeden záznam. Ten odpovídá množině prvních, ale neodpovídá množině poslední.
 			return [False, count($expected) ? $expected : self::buildExpected($this->last, $offset)];

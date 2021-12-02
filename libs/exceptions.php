@@ -24,7 +24,7 @@ class ParseException extends RuntimeException
 
 	static function emptyContent()
 	{
-		return new static('Empty content.', self::EMPTY_CONTENT);
+		return new self('Empty content.', self::EMPTY_CONTENT);
 	}
 
 
@@ -48,7 +48,7 @@ class ParseException extends RuntimeException
 			$code = self::UNEXPECTED_TOKEN;
 		}
 
-		$inst = new static($msg, $code);
+		$inst = new self($msg, $code);
 		$inst->contentLine = $line;
 		$inst->contentColumn = $col;
 		$inst->expectedTokens = $expectedTokens;
