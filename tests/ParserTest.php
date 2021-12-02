@@ -153,7 +153,7 @@ welcome Welcome, {\$name}, to {-brand-name}!\n
 
 	/**
 	 * Bez odsazení
-	 */
+	 * /
 	function _____testSample3()
 	{
 		$parser = new Parser([
@@ -238,7 +238,7 @@ xyp = Lorem ipsum  {   abc  } dd
 
 	/**
 	 * @dataProvider dataSample5
-	 */
+	 * /
 	function _____testSample5($src, $expected)
 	{
 		$parser = new Parser([
@@ -348,7 +348,7 @@ xyp = Lorem ipsum  {   abc  } dd
 			self::makeToken('element', "cccc ddd", 14, 22),
 			self::makeToken('element', "yty", 23, 26),
 		], $parser->parse($src));
-		//*/
+		//* /
 	}
 
 
@@ -369,7 +369,7 @@ xyp = Lorem ipsum  {   abc  } dd
 			self::makeToken('element', "cccc ddd", 14, 22),
 			self::makeToken('element', "yty", 23, 26),
 		], $parser->parse($src));
-		//*/
+		//* /
 	}
 
 
@@ -388,7 +388,7 @@ xyp = Lorem ipsum  {   abc  } dd
 				Parser::untilPattern(Null, "'", ['skip' => Parser::pattern(Null, '\\\''),]),
 			]),
 		]));
-		*/
+		* /
 
 		// nebo?
 		// Najde symbol. Ale protože ten sežere celou řádku, hledá se čím jej omezit. Omezí se další variantou - tou, která je nejblíž. Tím se získá tak akorád krátký úsek.
@@ -430,7 +430,7 @@ xyp = Lorem ipsum  {   abc  } dd
 			self::makeToken('text', '', 14, 22),
 			self::makeToken('symbol', 'yz', 14, 22),
 		], $parser->parse($src));
-		//*/
+		//* /
 	}
 
 
@@ -480,7 +480,7 @@ xyp = Lorem ipsum  {   abc  } dd
 
 	/**
 	 * @dataProvider dataSequence
-	 */
+	 * /
 	function _____testSequence($def, $src, $expected)
 	{
 		$this->assertEquals($expected, (new Parser($def))->parseRaw($src));
@@ -556,7 +556,7 @@ xyp = Lorem ipsum  {   abc  } dd
 
 	/**
 	 * @dataProvider dataVariants
-	 */
+	 * /
 	function _____testVariants($def, $src, $expected)
 	{
 		$this->assertEquals($expected, (new Parser($def))->parseRaw($src));
@@ -586,7 +586,7 @@ xyp = Lorem ipsum  {   abc  } dd
 			$white,
 			Parser::pattern('param', '\:[a-z0-9]+'),
 		]);
-		//*/
+		//* /
 		$def1 = Parser::variants(Null, [
 			Parser::pattern('column', '[a-z0-9]+'),
 			Parser::pattern('param', '\:[a-z0-9]+'),
@@ -760,7 +760,7 @@ xyp = Lorem ipsum  {   abc  } dd
 		//~ dump($parser->parseRaw("a :b x :cdd\nJakSeDa :blblbl ole"));
 		//~ dump($parser->parse("not"));
 	}
-
+	//*/
 
 
 	private static function makeToken($type, $content, $start, $end)

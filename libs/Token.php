@@ -57,6 +57,16 @@ class Token
 
 
 
+	/**
+	 * @return bool
+	 */
+	function isCapture()
+	{
+		return $this->type->isCapture();
+	}
+
+
+
 	function __toString()
 	{
 		if (is_string($this->content)) {
@@ -64,6 +74,10 @@ class Token
 		}
 		$ret = [];
 		foreach ($this->content as $x) {
+			if (is_string($x)) {
+				$ret[] = $x;
+				continue;
+			}
 			$pad = '';
 			if (isset($prev) && $prev < $x->start) {
 				$pad = str_repeat(' ', $x->start - $prev);

@@ -6,6 +6,7 @@
 
 namespace Taco\BNF;
 
+use Taco\BNF\Combinator;
 use Taco\BNF\Combinators\Variants;
 
 
@@ -43,11 +44,11 @@ class Parser
 		list($node, $expected) = $this->schema->scan($src, 0, []);
 		if ($node) {
 			if ($node->end < strlen($src)) {
-				throw self::fail($src, $node->end, $expected);
+				throw self::fail($src, $node->end, array_keys($expected));
 			}
 			return $node;
 		}
-		throw self::fail($src, 0, $expected);
+		throw self::fail($src, 0, array_keys($expected));
 	}
 
 
@@ -103,9 +104,9 @@ class Parser
 	{
 		$xs = [];
 		foreach (explode("\n", $src) as $i => $x) {
-			$xs[] = sprintf('%' . (strlen($first) + 1) . 'd > %s', $first + $i, $x);
+			$xs[] = sprintf('%' . ($first + 1) . 'd > %s', $first + $i, $x);
 			if ($first + $i == $line) {
-				$xs[] = sprintf('%' . ((strlen($first) + 1) + $col + 3) . 's', '---^'); // ———
+				$xs[] = sprintf('%' . (($first + 1) + $col + 3) . 's', '---^'); // ——— @TODO
 			}
 		}
 		if (count($xs) > 20) {

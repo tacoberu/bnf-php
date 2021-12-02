@@ -103,7 +103,19 @@ class Sequence implements Combinator
 
 		$first = reset($res);
 		$last = end($res);
-		return [new Token($this, Utils::filterCapture($res), $first->start, $last->end), []];
+		if (is_bool($first)) {
+			throw new LogicException("Sequence combinator must containt minimal two items. (first)");
+		}
+		if (is_bool($last)) {
+			throw new LogicException("Sequence combinator must containt minimal two items. (last)");
+		}
+		$res = Utils::filterCapture($res);
+		$res = Utils::flatting($res);
+		if (empty($this->getName()) && count($res) == 1) {
+//			return [reset($res), []];
+		}
+
+		return [new Token($this, $res, $first->start, $last->end), []];
 	}
 
 

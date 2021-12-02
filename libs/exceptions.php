@@ -57,14 +57,14 @@ class ParseException extends RuntimeException
 			$code = self::UNEXPECTED_CONTENT;
 		}
 		elseif (count($expectedTokens) > 1) {
-			$expectedTokens = array_keys($expectedTokens);
+			//~ $expectedTokens = array_keys($expectedTokens);
 			$last = array_pop($expectedTokens);
 			$first = implode('\', \'', $expectedTokens);
 			$msg = "Unexpected token on line $line, column $col: expected token '$first' or '$last'";
 			$code = self::UNEXPECTED_TOKEN;
 		}
 		else {
-			$expectedTokens = array_keys($expectedTokens);
+			//~ $expectedTokens = array_keys($expectedTokens);
 			$msg = "Unexpected token on line $line, column $col: expected token '" . implode(', ', $expectedTokens) . '\'';
 			$code = self::UNEXPECTED_TOKEN;
 		}

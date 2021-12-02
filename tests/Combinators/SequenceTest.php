@@ -146,6 +146,103 @@ class SequenceTest extends TestCase
 
 
 
+	function testSample7()
+	{
+		$sep = new Whitechars(Null, False);
+		$identifier = new Pattern('Identifier', ['~[a-zA-Z0-9]+~']);
+		$parser = new Sequence('Element', [
+			$identifier,
+			(new Sequence(Null, [$sep, new Text('Name')]))->setOptional(),
+		]);
+
+		$src = 'Token "ahoj"';
+		list($ast,) = $parser->scan($src, 0, []);
+		$this->assertSame('Element', $ast->getName());
+		$this->assertSame('Token "ahoj"', (string) $ast);
+
+		$src = 'Token';
+		list($ast,) = $parser->scan($src, 0, []);
+		$this->assertSame('Element', $ast->getName());
+		$this->assertSame('Token', (string) $ast);
+	}
+
+
+
+	function testSample8()
+	{
+		$sep = new Whitechars(Null, False);
+		$identifier = new Pattern('Identifier', ['~[a-zA-Z0-9]+~']);
+		$element = new Sequence('Element', [
+			$identifier,
+			(new Sequence(Null, [$sep, new Text('Name')]))->setOptional(),
+		]);
+		$parser = new Sequence('Collection', [
+			new Match('CollectionStart', ['['], False),
+			new Variants(Null, [
+				$element,
+				$sep
+			]),
+			new Match('CollectionEnd', [']'], False),
+		]);
+
+		$src = '[Token "ahoj"]';
+		list($ast,) = $parser->scan($src, 0, []);
+//~ dump($ast->content[0]);
+		$this->assertSame('Collection', $ast->getName());
+		$this->assertSame(1, count($ast->content));
+		$this->assertSame(1, count($ast->content[0]->content));
+		$node = $ast->content[0]->content[0];
+//~ dump($node);
+		$this->assertSame('Element', $node->getName());
+		$this->assertSame('Token "ahoj"', (string) $node);
+
+		$src = '[Token]';
+		list($ast,) = $parser->scan($src, 0, []);
+//~ dump($ast->content[0]);
+		$this->assertSame('Collection', $ast->getName());
+		$this->assertSame(1, count($ast->content));
+		$this->assertSame(1, count($ast->content[0]->content));
+		$node = $ast->content[0]->content[0];
+//~ dump($node);
+		$this->assertSame('Element', $node->getName());
+		$this->assertSame('Token', (string) $node);
+	}
+
+
+
+	function testSample9()
+	{
+		$sep = new Whitechars(Null, False);
+
+		$parser = (new Sequence(Null, [$sep, new Text('Name')]));
+
+		$src = ' "Token ahoj"';
+		list($ast,) = $parser->scan($src, 0, []);
+		$this->assertSame('Name', $ast->getName());
+	}
+
+
+
+	function _testSample10()
+	{
+		$sep = new Whitechars(Null, False);
+		$parser = (new Sequence(Null, [
+			$sep,
+			new Text('Name'),
+			$sep,
+			new Match(Null, ['x']),
+		]));
+
+		$src = ' "Token ahoj"' . "\n\n\nx";
+		list($ast, $expec) = $parser->scan($src, 0, []);
+		dump($expec);
+		dump($ast);
+		$this->assertSame('Name', $ast->getName());
+		dump(strlen($src));
+	}
+
+
+
 	/**
 	 * @dataProvider dataUnmatch
 	 */
@@ -281,5 +378,65 @@ class SequenceTest extends TestCase
 		$this->expectExceptionMessage("Sequence combinator must containt minimal two items.");
 		new Sequence(Null, [new Match(Null, [])]);
 	}
+
+
+
+/*
+	function _testBug1()
+	{
+		$sep = new Whitechars(Null, False);
+		$nl = new Pattern(Null, ['~[\r\n]+~',], False);
+		$comment = new Pattern('Comment', ['~^#.*$~m'], False);
+		$identifier = new Pattern('Identifier', ['~' . self::$symbolPattern . '~']);
+		$textElement = new Pattern('TextElement', ['~[^\{\}]+~s']);
+		$pattern = new Sequence('VariableReference', [
+			new Pattern(Null, ['~\{[ \t]*~'], False),
+			new OneOf('Pattern', [
+				new Pattern('VariableReference', ['~' . self::$symbolPattern . '~']),
+				new Text('StringLiteral'),
+				new Sequence('FunctionReference', [
+					new Pattern('Id', ['~[A-Z]+~']),
+					new Match(Null, ['('], False),
+					new Variants('Arguments', [
+						new OneOf(Null, [
+							new Sequence('NamedArgument', [
+								new Pattern('Name', ['~[a-z][a-zA-Z]*~']),
+								new Pattern(Null, ['~\s*\:\s*~'], False),
+								new OneOf('Value', [
+									new Numeric('NumericLiteral'),
+									new Text('StringLiteral'),
+								]),
+							]),
+							$identifier,
+						]),
+						new Pattern(Null, ['~\s*,\s*~'], False),
+					]),
+					new Match(Null, [')'], False),
+				]),
+			]),
+			new Pattern(Null, ['~[ \t]*\}~'], False),
+		]);
+		$pattern = new Variants('Pattern', [
+			$nl,
+			$pattern,
+			new FluentSelectExpression('SelectExpression'),
+			$textElement,
+		]);
+
+		$message = new Sequence('Message', [
+			$identifier,
+			$sep,
+			new Match('assign', ['='], False),
+			(new Pattern(Null, ['~[ \t]+~'], False))->setOptional(),
+			new Indent(Null, $pattern, self::$skipIndent),
+		]);
+
+		$this->schema = new Variants('Resource', [
+			$message,
+			$comment,
+			$nl,
+		]);
+	}
+	*/
 
 }

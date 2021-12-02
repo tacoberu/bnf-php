@@ -13,20 +13,24 @@ use LogicException;
 class Utils
 {
 
+	/**
+	 * Na $src se zpracují regulární výrazi a v při prvním úspěchu to vrátí vytvořený token $typu.
+	 *
+	 * @param array<string> $patterns Kolekce regulárních výrazů.
+	 * @param string $src
+	 * @param int $offset
+	 * @return Token|False
+	 */
 	static function scanPattern(Combinator $type, array $patterns, $src, $offset)
 	{
 		foreach ($patterns as $pattern) {
 			if (preg_match($pattern, $src, $out, PREG_OFFSET_CAPTURE, $offset) && $out[0][1] === $offset) {
 				if (count($out) == 1) {
-					if (strlen($out[0][0]) == 0) {
-						throw new LogicException("The pattern '$pattern' corresponds to an empty string.");
-					}
+					self::assertEmptyString($out[0][0], $pattern);
 					return new Token($type, $out[0][0], $out[0][1], $out[0][1] + strlen($out[0][0]));
 				}
 				elseif (count($out) == 2) {
-					if (strlen($out[1][0]) == 0) {
-						throw new LogicException("The pattern '$pattern' corresponds to an empty string.");
-					}
+					self::assertEmptyString($out[1][0], $pattern);
 					return new Token($type, $out[1][0], $out[1][1], $out[1][1] + strlen($out[1][0]));
 				}
 				else {
@@ -39,6 +43,10 @@ class Utils
 
 
 
+	/**
+	 * @param array<string, Combinator> $bank
+	 * @return array<string, Combinator>
+	 */
 	static function addToBank(array $bank, Combinator $node)
 	{
 		if ($node->getName()) {
@@ -49,6 +57,11 @@ class Utils
 
 
 
+	/**
+	 * @param array<Combinator> $xs
+	 * @param int $offset
+	 * @return array<string, int>
+	 */
 	static function buildExpected(array $xs, $offset)
 	{
 		$ret = [];
@@ -62,11 +75,16 @@ class Utils
 
 
 
+	/**
+	 * Odstraní ty, které se nemamí pamatovat.
+	 * @param array<Token> $res
+	 * @return array<Token>
+	 */
 	static function filterCapture(array $res)
 	{
 		$ret = [];
 		foreach ($res as $x) {
-			if ($x->type->isCapture()) {
+			if ($x->isCapture()) {
 				$ret[] = $x;
 			}
 		}
@@ -75,17 +93,22 @@ class Utils
 
 
 
+	/**
+	 * @param array<Token> $src
+	 * @return array<Token>
+	 */
 	static function flatting(array $src)
 	{
 		$ret = [];
 		foreach ($src as $x) {
 			switch (True) {
-				case $x->type instanceof Sequence && count($x->content) === 1 && empty($x->getName()):
+				case $x->type instanceof Sequence && is_array($x->content) && count($x->content) === 1 && empty($x->getName()) && reset($x->content) instanceof Token:
 					$item = reset($x->content);
 					$item->start = $x->start;
 					$item->end = $x->end;
 					$ret[] = $item;
 					break;
+				/* To zdrcávání není úplně domyšlené...
 				case $x->type instanceof Sequence && count($x->content) === 1:
 					$item = reset($x->content);
 					if (empty($item->getName())) {
@@ -94,7 +117,7 @@ class Utils
 						$item->end = $x->end;
 					}
 					$ret[] = $item;
-					break;
+					break;//*/
 				default:
 					$ret[] = $x;
 			}
@@ -104,16 +127,28 @@ class Utils
 
 
 
-	static function lookupBlock($start, $end, $src, $offset)
+	/**
+	 * Mějme definovaný blok, kde začátek je definovaný pomocí $start a konec
+	 * pomocí $end. Vrátí nám indexy startu a konce. Přičemž zohledňuje zanoření.
+	 * @TODO Neumí escapovat.
+	 *
+	 * @param string $startmarker
+	 * @param string $endmarker
+	 * @param string $src
+	 * @param int $offset
+	 *
+	 * @return array<int|false> [index-start, index-end]
+	 */
+	static function lookupBlock($startmarker, $endmarker, $src, $offset)
 	{
 		if ($offset >= strlen($src)) {
 			return [False, False];
 		}
-		$startIndex = strpos($src, $start, $offset);
-		$endIndex = strpos($src, $end, $offset);
+		$startIndex = strpos($src, $startmarker, $offset);
+		$endIndex = strpos($src, $endmarker, $offset);
 
 		if ($startIndex !== False) {
-			$endIndex = self::lookupEndIndex($start, $end, $src, $startIndex + 1);
+			$endIndex = self::lookupEndIndex($startmarker, $endmarker, $src, $startIndex + 1);
 			return [$startIndex, $endIndex];
 		}
 		return [False, False];
@@ -121,6 +156,13 @@ class Utils
 
 
 
+	/**
+	 * @param string $start
+	 * @param string $end
+	 * @param string $src
+	 * @param int $offset
+	 * @return int<0, max>|false
+	 */
 	private static function lookupEndIndex($start, $end, $src, $offset)
 	{
 		$startIndex = strpos($src, $start, $offset);
@@ -132,6 +174,20 @@ class Utils
 			return $endIndex;
 		}
 		return $endIndex;
+	}
+
+
+
+	/**
+	 * @param string $src
+	 * @param string $pattern For using in a exception message.
+	 * @return void
+	 */
+	private static function assertEmptyString($src, $pattern)
+	{
+		if (strlen($src) == 0) {
+			throw new LogicException("The pattern '$pattern' corresponds to an empty string.");
+		}
 	}
 
 }
