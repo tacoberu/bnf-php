@@ -42,12 +42,9 @@ class MatchTest extends TestCase
 	/**
 	 * @dataProvider dataCorrect
 	 */
-	function testCorrect($src, $offset, $content)
+	function testCorrect($def, $src, $offset, $content)
 	{
-		$parser = new Match('num', [
-			'x',
-			'234',
-		]);
+		$parser = new Match(null, $def);
 		list($token,) = $parser->scan($src, $offset, []);
 		$this->assertToken($content, $token);
 	}
@@ -56,11 +53,20 @@ class MatchTest extends TestCase
 
 	function dataCorrect()
 	{
+		$def1 = [
+			'x',
+			'234',
+		];
+		$def2 = [
+			': ',
+			':',
+		];
 		return [
-			['x1234 5 x 6', 2, '234'],
-			['x1234 5 x 6', 0, 'x'],
-			['x1234 5 x 6', 8, 'x'],
-			['x1234 5 X 6', 8, 'X'],
+			[$def1, 'x1234 5 x 6', 2, '234'],
+			[$def1, 'x1234 5 x 6', 0, 'x'],
+			[$def1, 'x1234 5 x 6', 8, 'x'],
+			[$def1, 'x1234 5 X 6', 8, 'X'],
+			[$def2, '"abc": "def"', 5, ': '],
 		];
 	}
 
