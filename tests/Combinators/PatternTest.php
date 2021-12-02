@@ -113,4 +113,56 @@ class PatternTest extends TestCase
 		$this->assertFalse($parser->isOptional());
 	}
 
+
+
+	function testNewLineLinux()
+	{
+		$pattern = 'YWJjCgoKZGVmCmVmZwo=';
+		$parser = new Pattern('nl', [
+			'~[\r\n]+~',
+		]);
+
+		$src = base64_decode($pattern);
+
+		list($token, $expected) = $parser->scan($src, 3, []);
+		$this->assertSame(3, $token->start);
+		$this->assertSame(6, $token->end);
+		$this->assertSame([], $expected);
+	}
+
+
+
+	function testNewLineWindows()
+	{
+		$pattern = 'YWJjDQoNCg0KZGVmDQplZmcNCg==';
+
+		$parser = new Pattern('nl', [
+			'~[\r\n]+~',
+		]);
+
+		$src = base64_decode($pattern);
+
+		list($token, $expected) = $parser->scan($src, 3, []);
+		$this->assertSame(3, $token->start);
+		$this->assertSame(9, $token->end);
+		$this->assertSame([], $expected);
+	}
+
+
+
+	function testNewLineMacClassic()
+	{
+		$pattern = 'YWJjDQ0NZGVmDWVmZw0=';
+		$parser = new Pattern('nl', [
+			'~[\r\n]+~',
+		]);
+
+		$src = base64_decode($pattern);
+
+		list($token, $expected) = $parser->scan($src, 3, []);
+		$this->assertSame(3, $token->start);
+		$this->assertSame(6, $token->end);
+		$this->assertSame([], $expected);
+	}
+
 }
