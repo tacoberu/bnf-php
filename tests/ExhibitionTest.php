@@ -15,6 +15,7 @@ use Taco\BNF\Combinators\Sequence;
 use Taco\BNF\Combinators\Variants;
 use Taco\BNF\Combinators\OneOf;
 use Taco\BNF\Combinators\Text;
+use Taco\BNF\Combinators\Until;
 
 
 class ExhibitionTest extends TestCase
@@ -206,6 +207,7 @@ welcome = Welcome, {$name}, to {-brand-name}!
 		$input = '
 			@author John Dee
 			@package Project
+			@email name@domain.tld
 		';
 
 		$parser = new Variants(Null, [
@@ -214,18 +216,47 @@ welcome = Welcome, {$name}, to {-brand-name}!
 				(new Whitechars(Null, False))->setOptional(),
 				new Match(Null, ['@'], False),
 				new Pattern('name', ['~[a-z][a-zA-Z0-9\-]*~']),
-				(new Whitechars(Null, False)),
-				new Pattern('value', ['~([^\@]+)\n[\t\ ]*\@~', '~[^\@]+~']),
+				new Whitechars(Null, False),
+				new Until('value', ['~\n[\t\ ]*\@[a-z][a-zA-Z0-9\-]*~']),
 			]),
 		]);
 
 		list($token, $expected) = $parser->scan($input, 0, []);
 		$this->assertEquals([], $expected);
-		$this->assertCount(2, $token->content);
+		$this->assertEquals(0, $token->start);
+		$this->assertEquals(69, $token->end);
+		$this->assertCount(3, $token->content);
 		$this->assertEquals("author John Dee", (string)$token->content[0]);
-		$this->assertEquals("package Project\n\t\t", (string)$token->content[1]);
+		$this->assertEquals("package Project", (string)$token->content[1]);
+		$this->assertEquals("email name@domain.tld\n\t\t", (string)$token->content[2]);
 		$this->assertEquals("author", (string)$token->content[0]->content[0]);
 		$this->assertEquals("John Dee", (string)$token->content[0]->content[1]);
+	}
+
+
+
+	function testDocCommentAnnotation3()
+	{
+		$input = '
+			@email name@domain.tld
+			sdf sdf lsk l skdfjlks d
+			@author John Dee
+		';
+
+		$parser = new Sequence('anotation', [
+				(new Whitechars(Null, False))->setOptional(),
+				new Match(Null, ['@'], False),
+				new Pattern('name', ['~[a-z][a-zA-Z0-9\-]*~']),
+				new Whitechars(Null, False),
+				new Until('value', ['~\n[\t\ ]*\@[a-z][a-zA-Z0-9\-]*~']),
+			]);
+		list($token, $expected) = $parser->scan($input, 0, []);
+		$this->assertEquals([], $expected);
+		$this->assertEquals(0, $token->start);
+		$this->assertEquals(54, $token->end);
+		$this->assertCount(2, $token->content);
+		$this->assertEquals("email", (string)$token->content[0]);
+		$this->assertEquals("name@domain.tld\n\t\t\tsdf sdf lsk l skdfjlks d", (string)$token->content[1]);
 	}
 
 }
