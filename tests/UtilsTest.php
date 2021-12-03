@@ -112,6 +112,15 @@ class UtilsTest extends TestCase
 
 
 
+	function testScanPattern_noCheckStart()
+	{
+		$comb = $this->createMock(Combinator::class);
+		$token = Utils::scanPattern($comb, ['~[0-9]+~'], "abcds123", 3, False);
+		$this->assertEquals(new Token($comb, '123', 5, 8), $token);
+	}
+
+
+
 	/**
 	 * @dataProvider dataLookupBlock
 	 */

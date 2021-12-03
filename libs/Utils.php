@@ -14,17 +14,20 @@ class Utils
 {
 
 	/**
-	 * Na $src se zpracují regulární výrazi a v při prvním úspěchu to vrátí vytvořený token $typu.
+	 * Na $src se zpracují regulární výrazi a v při prvním úspěchu to vrátí vytvořený
+	 * token $typu. Defaultně přistupuje ke všem patternům jako kdyby byly ukotveny k začátku. Viz
+	 * přepínač $checkStart.
 	 *
 	 * @param array<string> $patterns Kolekce regulárních výrazů.
 	 * @param string $src
 	 * @param int $offset
+	 * @param bool $checkStart Umožní samoposun. Například číslo pro $src: "abcds123" a $offset: 3 to najde shodu. Ale až od pozice 5.
 	 * @return Token|False
 	 */
-	static function scanPattern(Combinator $type, array $patterns, $src, $offset)
+	static function scanPattern(Combinator $type, array $patterns, $src, $offset, $checkStart = True)
 	{
 		foreach ($patterns as $pattern) {
-			if (preg_match($pattern, $src, $out, PREG_OFFSET_CAPTURE, $offset) && $out[0][1] === $offset) {
+			if (preg_match($pattern, $src, $out, PREG_OFFSET_CAPTURE, $offset) && self::checkStartOffset($out[0][1], $offset, $checkStart)) {
 				if (count($out) == 1) {
 					self::assertEmptyString($out[0][0], $pattern);
 					return new Token($type, $out[0][0], $out[0][1], $out[0][1] + strlen($out[0][0]));
@@ -174,6 +177,22 @@ class Utils
 			return $endIndex;
 		}
 		return $endIndex;
+	}
+
+
+
+	/**
+	 * @param mixed $val
+	 * @param mixed $expected
+	 * @param bool $checkStart
+	 * @return bool
+	 */
+	private static function checkStartOffset($val, $expected, $checkStart)
+	{
+		if ( ! $checkStart) {
+			return True;
+		}
+		return $val === $expected;
 	}
 
 
