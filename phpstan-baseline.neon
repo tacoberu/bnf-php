@@ -1,0 +1,121 @@
+parameters:
+	ignoreErrors:
+		-
+			message: "#^Cannot access offset 1 on array\\<array\\{string, int\\<\\-1, max\\>\\}\\|int\\<\\-1, max\\>\\|string\\>\\|false\\.$#"
+			count: 4
+			path: libs/Combinators/Indent.php
+
+		-
+			message: "#^Else branch is unreachable because ternary operator condition is always true\\.$#"
+			count: 1
+			path: libs/Combinators/Indent.php
+
+		-
+			message: "#^Method Taco\\\\BNF\\\\Combinators\\\\Indent\\:\\:__construct\\(\\) has parameter \\$skipIndent with no value type specified in iterable type array\\.$#"
+			count: 1
+			path: libs/Combinators/Indent.php
+
+		-
+			message: "#^Method Taco\\\\BNF\\\\Combinators\\\\Indent\\:\\:backwardNewLine\\(\\) has parameter \\$offset with no type specified\\.$#"
+			count: 1
+			path: libs/Combinators/Indent.php
+
+		-
+			message: "#^Method Taco\\\\BNF\\\\Combinators\\\\Indent\\:\\:backwardNewLine\\(\\) has parameter \\$src with no type specified\\.$#"
+			count: 1
+			path: libs/Combinators/Indent.php
+
+		-
+			message: "#^Method Taco\\\\BNF\\\\Combinators\\\\Indent\\:\\:backwardNewLine\\(\\) should return int but returns false\\.$#"
+			count: 1
+			path: libs/Combinators/Indent.php
+
+		-
+			message: "#^Method Taco\\\\BNF\\\\Combinators\\\\Indent\\:\\:backwardNewLine\\(\\) should return int but returns int\\<0, max\\>\\|false\\.$#"
+			count: 2
+			path: libs/Combinators/Indent.php
+
+		-
+			message: "#^Method Taco\\\\BNF\\\\Combinators\\\\Indent\\:\\:calculateIndent\\(\\) has parameter \\$offset with no type specified\\.$#"
+			count: 1
+			path: libs/Combinators/Indent.php
+
+		-
+			message: "#^Method Taco\\\\BNF\\\\Combinators\\\\Indent\\:\\:calculateIndent\\(\\) has parameter \\$src with no type specified\\.$#"
+			count: 1
+			path: libs/Combinators/Indent.php
+
+		-
+			message: "#^Method Taco\\\\BNF\\\\Combinators\\\\Indent\\:\\:calculateIndent\\(\\) should return string but returns null\\.$#"
+			count: 1
+			path: libs/Combinators/Indent.php
+
+		-
+			message: "#^Method Taco\\\\BNF\\\\Combinators\\\\Indent\\:\\:lookupEndOfBlock\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: libs/Combinators/Indent.php
+
+		-
+			message: "#^Method Taco\\\\BNF\\\\Combinators\\\\Indent\\:\\:lookupEndOfBlock\\(\\) has parameter \\$indent with no type specified\\.$#"
+			count: 1
+			path: libs/Combinators/Indent.php
+
+		-
+			message: "#^Method Taco\\\\BNF\\\\Combinators\\\\Indent\\:\\:lookupEndOfBlock\\(\\) has parameter \\$offset with no type specified\\.$#"
+			count: 1
+			path: libs/Combinators/Indent.php
+
+		-
+			message: "#^Method Taco\\\\BNF\\\\Combinators\\\\Indent\\:\\:lookupEndOfBlock\\(\\) has parameter \\$src with no type specified\\.$#"
+			count: 1
+			path: libs/Combinators/Indent.php
+
+		-
+			message: "#^Method Taco\\\\BNF\\\\Combinators\\\\Indent\\:\\:sliceBlock\\(\\) has no return type specified\\.$#"
+			count: 1
+			path: libs/Combinators/Indent.php
+
+		-
+			message: "#^Method Taco\\\\BNF\\\\Combinators\\\\Indent\\:\\:sliceBlock\\(\\) has parameter \\$indent with no type specified\\.$#"
+			count: 1
+			path: libs/Combinators/Indent.php
+
+		-
+			message: "#^Method Taco\\\\BNF\\\\Combinators\\\\Indent\\:\\:sliceBlock\\(\\) has parameter \\$offset with no type specified\\.$#"
+			count: 1
+			path: libs/Combinators/Indent.php
+
+		-
+			message: "#^Method Taco\\\\BNF\\\\Combinators\\\\Indent\\:\\:sliceBlock\\(\\) has parameter \\$src with no type specified\\.$#"
+			count: 1
+			path: libs/Combinators/Indent.php
+
+		-
+			message: "#^Parameter \\#1 \\$var of function count expects array\\|Countable, array\\<array\\<int, int\\|string\\>\\|int\\<\\-1, max\\>\\|string\\>\\|false given\\.$#"
+			count: 4
+			path: libs/Combinators/Indent.php
+
+		-
+			message: "#^Property Taco\\\\BNF\\\\Combinators\\\\Indent\\:\\:\\$parser has no type specified\\.$#"
+			count: 1
+			path: libs/Combinators/Indent.php
+
+		-
+			message: "#^Property Taco\\\\BNF\\\\Combinators\\\\Indent\\:\\:\\$skipIndent has no type specified\\.$#"
+			count: 1
+			path: libs/Combinators/Indent.php
+
+		-
+			message: "#^Property Taco\\\\BNF\\\\Combinators\\\\Indent\\:\\:\\$skipIndent is never read, only written\\.$#"
+			count: 1
+			path: libs/Combinators/Indent.php
+
+		-
+			message: "#^Parameter \\#2 \\$start of function substr expects int, int\\<0, max\\>\\|false given\\.$#"
+			count: 2
+			path: libs/Parser.php
+
+		-
+			message: "#^Parameter \\#3 \\$length of function substr expects int, int\\<0, max\\>\\|false given\\.$#"
+			count: 1
+			path: libs/Parser.php
