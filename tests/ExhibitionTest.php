@@ -11,6 +11,7 @@ use LogicException;
 use Taco\BNF\Combinators\Whitechars;
 use Taco\BNF\Combinators\Pattern;
 use Taco\BNF\Combinators\Match;
+use Taco\BNF\Combinators\Many;
 use Taco\BNF\Combinators\Sequence;
 use Taco\BNF\Combinators\Variants;
 use Taco\BNF\Combinators\OneOf;
@@ -239,7 +240,7 @@ welcome = Welcome, {$name}, to {-brand-name}!
 	{
 		$input = '
 			@email name@domain.tld
-			sdf sdf lsk l skdfjlks d
+			Lorem ipsum doler ist.
 			@author John Dee
 		';
 
@@ -253,10 +254,112 @@ welcome = Welcome, {$name}, to {-brand-name}!
 		list($token, $expected) = $parser->scan($input, 0, []);
 		$this->assertEquals([], $expected);
 		$this->assertEquals(0, $token->start);
-		$this->assertEquals(54, $token->end);
+		$this->assertEquals(52, $token->end);
 		$this->assertCount(2, $token->content);
 		$this->assertEquals("email", (string)$token->content[0]);
-		$this->assertEquals("name@domain.tld\n\t\t\tsdf sdf lsk l skdfjlks d", (string)$token->content[1]);
+		$this->assertEquals("name@domain.tld\n\t\t\tLorem ipsum doler ist.", (string)$token->content[1]);
+	}
+
+
+
+	function testDocCommentAnnotation4()
+	{
+		$input = '
+			@author John Dee
+			@package Project	';
+
+		$parser = new Many(Null, new Sequence('anotation', [
+			(new Whitechars(Null, False))->setOptional(),
+			new Match(Null, ['@'], False),
+			new Pattern('name', ['~[a-z][a-zA-Z0-9\-]*~']),
+			new Pattern(Null, ['~[\t ]+~'], False),
+			new Pattern('value', ['~[^\n]+~s']),
+		]));
+
+		list($token, $expected) = $parser->scan($input, 0, []);
+		$this->assertEquals([], $expected);
+		$this->assertCount(2, $token->content);
+		$this->assertEquals(0, $token->start);
+		$this->assertEquals(41, $token->end);
+		$this->assertEquals("author John Dee", (string)$token->content[0]);
+		$this->assertEquals("package Project\t", (string)$token->content[1]);
+		$this->assertEquals("author", (string)$token->content[0]->content[0]);
+		$this->assertEquals("John Dee", (string)$token->content[0]->content[1]);
+	}
+
+
+
+	function testDocCommentAnnotation5()
+	{
+		$input = '
+			@email name@domain.tld
+			Lorem ipsum doler ist.
+			@author John Dee
+		';
+
+		$parser = new Many(Null,
+			new Sequence('anotation', [
+				(new Whitechars(Null, False))->setOptional(),
+				new Match(Null, ['@'], False),
+				new Pattern('name', ['~[a-z][a-zA-Z0-9\-]*~']),
+				new Whitechars(Null, False),
+				new Until('value', ['~\n[\t\ ]*\@[a-z][a-zA-Z0-9\-]*~']),
+			]));
+		list($token, $expected) = $parser->scan($input, 0, []);
+		$this->assertEquals([], $expected);
+		$this->assertEquals(0, $token->start);
+		$this->assertEquals(75, $token->end);
+		$this->assertCount(2, $token->content);
+		$this->assertEquals("email", (string)$token->content[0]->content[0]);
+		$this->assertEquals("name@domain.tld\n\t\t\tLorem ipsum doler ist.", (string)$token->content[0]->content[1]);
+		$this->assertEquals("author", (string)$token->content[1]->content[0]);
+		$this->assertEquals("John Dee\n\t\t", (string)$token->content[1]->content[1]);
+	}
+
+
+
+	function testDict()
+	{
+		$input = '{
+			email: Str
+			author: "John Dee"
+			sub: {
+				a: Num
+			}
+		}';
+
+		$value = new OneOf(Null, [
+			new Pattern('type', ['~[A-Z][a-zA-Z0-9]*~']),
+			new Text('textliteral'),
+			new Ref('dict'),
+		]);
+
+		$parser = new Sequence('dict', [
+			new Match(Null, ['{'], False),
+			(new Whitechars(Null, False))->setOptional(),
+			new Many(Null,
+				new Sequence('pair', [
+					(new Whitechars(Null, False))->setOptional(),
+					new Pattern('name', ['~[a-z][a-zA-Z0-9\-]*~']),
+					new Pattern(Null, ['~\s*\:\s*~'], False),
+					$value,
+				])),
+			(new Whitechars(Null, False))->setOptional(),
+			new Match(Null, ['}'], False),
+		]);
+		list($token, $expected) = $parser->scan($input, 0, []);
+
+		$this->assertEquals([], $expected);
+		$this->assertEquals(0, $token->start);
+		$this->assertEquals(67, $token->end);
+		$this->assertCount(1, $token->content);
+		$this->assertCount(3, $token->content[0]->content);
+		$this->assertEquals("email", (string)$token->content[0]->content[0]->content[0]);
+		$this->assertEquals("Str", (string)$token->content[0]->content[0]->content[1]);
+		$this->assertEquals("author", (string)$token->content[0]->content[1]->content[0]);
+		$this->assertEquals('"John Dee"', (string)$token->content[0]->content[1]->content[1]);
+		$this->assertEquals("sub", (string)$token->content[0]->content[2]->content[0]);
+		$this->assertEquals("a  Num", (string)$token->content[0]->content[2]->content[1]);
 	}
 
 }
