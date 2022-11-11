@@ -39,6 +39,16 @@ class Variants implements Combinator
 	 */
 	private $last;
 
+	/**
+	 * @var ?int Pokud je uveden, očekává se minimálně $min prvků.
+	 */
+	private $min;
+
+	/**
+	 * @var ?int Pokud je uveden, očekává se maximálně $max prvků.
+	 */
+	private $max;
+
 
 	/**
 	 * @param ?string $name
@@ -55,6 +65,20 @@ class Variants implements Combinator
 		$this->options = $options;
 		$this->first = $first ?: $options;
 		$this->last = $last ?: $options;
+	}
+
+
+
+	/**
+	 * @param ?int $min Pokud je uveden, očekává se minimálně $min prvků.
+	 * @param ?int $max Pokud je uveden, očekává se maximálně $max prvků.
+	 * @return self
+	 */
+	function setBoundary($min, $max)
+	{
+		$this->min = $min;
+		$this->max = $max;
+		return $this;
 	}
 
 
@@ -143,6 +167,16 @@ class Variants implements Combinator
 
 		$res = Utils::filterCapture($res);
 		$res = Utils::flatting($res);
+
+		if ($this->min && count($res) < $this->min) {
+			// Získali jsme méně jak požadovaný počet záznamů.
+			return [False, self::buildExpected($this->options, $offset)];
+		}
+
+		if ($this->max && count($res) > $this->max) {
+			// Získali jsme více jak požadovaný počet záznamů.
+			return [False, self::buildExpected($this->options, $offset)];
+		}
 
 		return [new Token($this, $res, $start, $last->end), $expected];
 	}
