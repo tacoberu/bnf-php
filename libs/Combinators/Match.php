@@ -18,9 +18,17 @@ class Match implements Combinator
 	use BaseCombinator;
 
 
+	/**
+	 * @var array<string>
+	 */
 	private $patterns;
 
 
+	/**
+	 * @param ?string $name
+	 * @param array<string> $patterns
+	 * @param bool $capture
+	 */
 	function __construct($name, array $patterns, $capture = True)
 	{
 		$this->name = $name;
@@ -30,6 +38,12 @@ class Match implements Combinator
 
 
 
+	/**
+	 * @param string $src
+	 * @param int $offset
+	 * @param array<string, Combinator> $bank
+	 * @return array{0: false|Token, 1: array<string, int>}
+	 */
 	function scan($src, $offset, array $bank)
 	{
 		if ($ret = $this->match($src, $offset, $bank)) {
@@ -40,6 +54,9 @@ class Match implements Combinator
 
 
 
+	/**
+	 * @return array<string>
+	 */
 	function getExpectedNames()
 	{
 		if (empty($this->name)) {
@@ -52,6 +69,9 @@ class Match implements Combinator
 
 	/**
 	 * Zjistí, zda jde matchnout číselnou hodnotu pro aktuální offset.
+	 * @param string $src
+	 * @param int $offset
+	 * @param array<string, Combinator> $bank
 	 * @return False|Token
 	 */
 	private function match($src, $offset, array $bank)

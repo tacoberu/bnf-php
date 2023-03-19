@@ -18,6 +18,10 @@ class Any implements Combinator
 	use BaseCombinator;
 
 
+	/**
+	 * @param string $name
+	 * @param bool $capture
+	 */
 	function __construct($name, $capture = True)
 	{
 		$this->name = $name;
@@ -27,7 +31,10 @@ class Any implements Combinator
 
 
 	/**
-	 * @return False|Token
+	 * @param string $src
+	 * @param int $offset
+	 * @param array<string, Combinator> $bank
+	 * @return array{0: false|Token, 1: array<string, int>}
 	 */
 	function scan($src, $offset, array $bank)
 	{
@@ -39,6 +46,9 @@ class Any implements Combinator
 
 
 
+	/**
+	 * @return array<string>
+	 */
 	function getExpectedNames()
 	{
 		if (empty($this->name)) {

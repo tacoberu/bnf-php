@@ -18,6 +18,10 @@ class Numeric implements Combinator
 	use BaseCombinator;
 
 
+	/**
+	 * @param string $name
+	 * @param bool $capture
+	 */
 	function __construct($name, $capture = True)
 	{
 		$this->name = $name;
@@ -27,8 +31,10 @@ class Numeric implements Combinator
 
 
 	/**
-	 * Zjistí, zda jde matchnout číselnou hodnotu pro aktuální offset.
-	 * @return False|Token
+	 * @param string $src
+	 * @param int $offset
+	 * @param array<string, Combinator> $bank
+	 * @return array{0: false|Token, 1: array<string, int>}
 	 */
 	function scan($src, $offset, array $bank)
 	{
@@ -44,6 +50,9 @@ class Numeric implements Combinator
 
 
 
+	/**
+	 * @return array<string>
+	 */
 	function getExpectedNames()
 	{
 		if (empty($this->name)) {

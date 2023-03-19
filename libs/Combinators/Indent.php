@@ -27,6 +27,10 @@ class Indent implements Combinator
 	private $skipIndent;
 
 
+	/**
+	 * @param string $name
+	 * @param bool $capture
+	 */
 	function __construct($name, Combinator $parser, array $skipIndent = [], $capture = True)
 	{
 		$this->name = $name;
@@ -37,6 +41,9 @@ class Indent implements Combinator
 
 
 
+	/**
+	 * @return array<string>
+	 */
 	function getExpectedNames()
 	{
 		if (empty($this->name)) {
@@ -48,8 +55,10 @@ class Indent implements Combinator
 
 
 	/**
-	 * Zjistí, zda jde matchnout číselnou hodnotu pro aktuální offset.
-	 * @return False|Token
+	 * @param string $src
+	 * @param int $offset
+	 * @param array<string, Combinator> $bank
+	 * @return array{0: false|Token, 1: array<string, int>}
 	 */
 	function scan($src, $offset, array $bank)
 	{

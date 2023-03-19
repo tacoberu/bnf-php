@@ -11,8 +11,10 @@ interface Combinator
 {
 
 	/**
-	 * Zjistí, zda jde matchnout číselnou hodnotu pro aktuální offset.
-	 * @return [False|Token, [$name:String => $offset:Int]]
+	 * @param string $src
+	 * @param int $offset
+	 * @param array<string, Combinator> $bank A list of combinators that can be referenced.
+	 * @return array{0: false|Token, 1: array<string, int>} with meening [False|Token, [$name:String => $offset:Int]]
 	 */
 	function scan($src, $offset, array $bank);
 
@@ -22,8 +24,20 @@ interface Combinator
 	function getName();
 
 	/**
-	 * @return [string]
+	 * @return array<string>
 	 */
 	function getExpectedNames();
+
+
+	/**
+	 * @return bool
+	 */
+	function isCapture();
+
+
+	/**
+	 * @return bool
+	 */
+	function isOptional();
 
 }

@@ -24,6 +24,10 @@ class Text implements Combinator
 	const SLASH = "\x5c";
 
 
+	/**
+	 * @param ?string $name
+	 * @param bool $capture
+	 */
 	function __construct($name, $capture = True)
 	{
 		$this->name = $name;
@@ -32,6 +36,9 @@ class Text implements Combinator
 
 
 
+	/**
+	 * @return array<string>
+	 */
 	function getExpectedNames()
 	{
 		if (empty($this->name)) {
@@ -42,6 +49,12 @@ class Text implements Combinator
 
 
 
+	/**
+	 * @param string $src
+	 * @param int $offset
+	 * @param array<string, Combinator> $bank
+	 * @return array{0: false|Token, 1: array<string, int>}
+	 */
 	function scan($src, $offset, array $bank)
 	{
 		if ($ret = $this->match($src, $offset, $bank)) {
@@ -53,6 +66,9 @@ class Text implements Combinator
 
 
 	/**
+	 * @param string $src
+	 * @param int $offset
+	 * @param array<string, Combinator> $bank
 	 * @return False|Token
 	 */
 	private function match($src, $offset, array $bank)
@@ -80,6 +96,11 @@ class Text implements Combinator
 
 
 
+	/**
+	 * @param string $quote
+	 * @param string $src
+	 * @return string
+	 */
 	private static function sanitize($quote, $src)
 	{
 		return strtr($src, [self::SLASH . $quote => $quote]);
@@ -87,6 +108,12 @@ class Text implements Combinator
 
 
 
+	/**
+	 * @param string $quote
+	 * @param string $src
+	 * @param int $offset
+	 * @return int|false
+	 */
 	private static function lookupQuoteIndex($quote, $src, $offset)
 	{
 		$offset += 1;

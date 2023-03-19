@@ -12,10 +12,15 @@ use Taco\BNF\Combinators\Variants;
 class Parser
 {
 
+	/**
+	 * @var Combinator
+	 */
 	private $schema;
 
 
-
+	/**
+	 * @param Combinator|array<Combinator> $schema
+	 */
 	function __construct($schema)
 	{
 		if (is_array($schema)) {
@@ -27,8 +32,8 @@ class Parser
 
 
 	/**
-	 * @param string
-	 * @return array of {name: string, content: string|array, start: int, end: int}
+	 * @param string $src
+	 * @return Token Like array of {name: string, content: string|array, start: int, end: int}
 	 */
 	function parse($src)
 	{
@@ -47,6 +52,12 @@ class Parser
 
 
 
+	/**
+	 * @param string $src
+	 * @param int $offset
+	 * @param array<string> $expectedTokens
+	 * @return ParseException
+	 */
 	private static function fail($src, $offset, array $expectedTokens)
 	{
 		list($line, $col) = self::calculateCoordinates($src, $offset);
@@ -66,7 +77,9 @@ class Parser
 
 	/**
 	 * Returns position of token in input string.
-	 * @return array of [line, column]
+	 * @param string $src
+	 * @param int $offset
+	 * @return array<int> of [line, column]
 	 */
 	private static function calculateCoordinates($src, $offset)
 	{
@@ -79,6 +92,13 @@ class Parser
 
 
 
+	/**
+	 * @param string $src
+	 * @param int $first
+	 * @param int $line
+	 * @param int $col
+	 * @return string
+	 */
 	private static function formatContext($src, $first, $line, $col)
 	{
 		$xs = [];

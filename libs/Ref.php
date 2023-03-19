@@ -11,7 +11,15 @@ use RuntimeException;
 
 class Ref
 {
+	/**
+	 * @var string
+	 */
 	public $name;
+
+
+	/**
+	 * @param string $name
+	 */
 	function __construct($name)
 	{
 		$this->name = $name;
@@ -19,11 +27,35 @@ class Ref
 
 
 
+	/**
+	 * @param array<string, Token> $bank
+	 * @return Token
+	 */
 	function requireFrom(array $bank)
 	{
 		if (isset($bank[$this->name])) {
 			return $bank[$this->name];
 		}
 		throw new RuntimeException("Ref to `{$this->name}` is not found.");
+	}
+
+
+
+	/**
+	 * @return ?string
+	 */
+	function getName()
+	{
+		return $this->name;
+	}
+
+
+
+	/**
+	 * @return array<string>
+	 */
+	function getExpectedNames()
+	{
+		return [$this->name];
 	}
 }

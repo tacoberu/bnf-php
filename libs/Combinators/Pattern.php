@@ -6,6 +6,7 @@
 
 namespace Taco\BNF\Combinators;
 
+use Taco\BNF\Token;
 use Taco\BNF\Utils;
 use Taco\BNF\BaseCombinator;
 use Taco\BNF\Combinator;
@@ -16,9 +17,17 @@ class Pattern implements Combinator
 
 	use BaseCombinator;
 
+	/**
+	 * @var array<string>
+	 */
 	private $patterns;
 
 
+	/**
+	 * @param ?string $name
+	 * @param array<string> $patterns
+	 * @param bool $capture
+	 */
 	function __construct($name, array $patterns, $capture = True)
 	{
 		$this->name = $name;
@@ -28,6 +37,9 @@ class Pattern implements Combinator
 
 
 
+	/**
+	 * @return array<string>
+	 */
 	function getExpectedNames()
 	{
 		if (empty($this->name)) {
@@ -39,8 +51,10 @@ class Pattern implements Combinator
 
 
 	/**
-	 * Zjistí, zda jde matchnout číselnou hodnotu pro aktuální offset.
-	 * @return [False|Token, $expected: array]
+	 * @param string $src
+	 * @param int $offset
+	 * @param array<string, Combinator> $bank
+	 * @return array{0: false|Token, 1: array<string, int>}
 	 */
 	function scan($src, $offset, array $bank)
 	{

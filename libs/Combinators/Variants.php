@@ -17,17 +17,36 @@ use LogicException;
 /**
  * Máme několik možností, které se navzájem střídají. Můžeme rozlišit, které
  * mají být na začátku, a které na konci. Nemohou být zvoleny dvě stejné za sebou - musí se střídat.
+ * Můžeme určit minimální a maximální počet, aby to bylo validní.
  */
 class Variants implements Combinator
 {
 
 	use BaseCombinator;
 
+	/**
+	 * @var array<Combinator>
+	 */
 	private $options;
+
+	/**
+	 * @var array<Combinator>
+	 */
 	private $first;
+
+	/**
+	 * @var array<Combinator>
+	 */
 	private $last;
 
 
+	/**
+	 * @param ?string $name
+	 * @param array<Combinator> $options
+	 * @param array<Combinator> $first
+	 * @param array<Combinator> $last
+	 * @param bool $capture
+	 */
 	function __construct($name, array $options, array $first = Null, array $last = Null, $capture = True)
 	{
 		self::assertOptionsCount($options);
@@ -40,6 +59,9 @@ class Variants implements Combinator
 
 
 
+	/**
+	 * @return array<string>
+	 */
 	function getExpectedNames()
 	{
 		if ($this->name) {
@@ -60,13 +82,17 @@ class Variants implements Combinator
 	 * - úspěšné matchnutí, ale ještě nejsme na konci = [Token, [$name]]
 	 * - úspěšné matchnutí, a jsme na konci = [Token, []]
 	 *
-	 * @return False|Token
+	 * @param string $src
+	 * @param int $offset
+	 * @param array<string, Combinator> $bank
+	 * @return array{0: false|Token, 1: array<string, int>}
 	 */
 	function scan($src, $offset, array $bank)
 	{
 		$bank = Utils::addToBank($bank, $this);
 		$res = [];
 		list($token, $expected, $sel) = self::parseFrom($this->first, null, $src, $offset, $bank);
+
 		// Zádné matchnutí
 		if ( ! $token) {
 			return [False, count($expected) ? $expected : self::buildExpected($this->first, $offset)];
@@ -123,6 +149,14 @@ class Variants implements Combinator
 
 
 
+	/**
+	 * @param array<Combinator> $options
+	 * @param ?Combinator $skip
+	 * @param string $src
+	 * @param int $offset
+	 * @param array<Combinator> $bank
+	 * @return array{false|Token, array<string, int>, ?Combinator}
+	 */
 	private static function parseFrom($options, $skip, $src, $offset, array $bank = [])
 	{
 		$expected = [];
@@ -144,6 +178,11 @@ class Variants implements Combinator
 
 
 
+	/**
+	 * @param array<Combinator> $xs
+	 * @param int $offset
+	 * @return array<string, int>
+	 */
 	private static function buildExpected(array $xs, $offset)
 	{
 		$ret = [];
@@ -159,6 +198,10 @@ class Variants implements Combinator
 
 
 
+	/**
+	 * @param array<Combinator> $xs
+	 * @return void
+	 */
 	private static function assertOptionsCount(array $xs)
 	{
 		if (count($xs) < 2) {

@@ -10,9 +10,33 @@ namespace Taco\BNF;
 class Token
 {
 
-	public $type, $content, $start, $end;
+	/**
+	 * @var Combinator
+	 */
+	public $type;
+
+	/**
+	 * @var array<string|Token> | string
+	 */
+	public $content;
+
+	/**
+	 * @var int
+	 */
+	public $start;
+
+	/**
+	 * @var int
+	 */
+	public $end;
 
 
+	/**
+	 * @param Combinator $type
+	 * @param array<string|Token> | string $content
+	 * @param int $start
+	 * @param int $end
+	 */
 	function __construct(Combinator $type, $content, $start, $end)
 	{
 		$this->type = $type;
@@ -23,6 +47,9 @@ class Token
 
 
 
+	/**
+	 * @return string
+	 */
 	function getName()
 	{
 		return $this->type->getName();

@@ -21,9 +21,17 @@ class OneOf implements Combinator
 
 	use BaseCombinator;
 
+	/**
+	 * @var array<Combinator|Ref>
+	 */
 	private $options;
 
 
+	/**
+	 * @param ?string $name
+	 * @param array<Combinator|Ref> $options
+	 * @param bool $capture
+	 */
 	function __construct($name, array $options, $capture = True)
 	{
 		$this->name = $name;
@@ -33,6 +41,9 @@ class OneOf implements Combinator
 
 
 
+	/**
+	 * @return array<string>
+	 */
 	function getExpectedNames()
 	{
 		if ($this->name) {
@@ -48,8 +59,10 @@ class OneOf implements Combinator
 
 
 	/**
-	 * Zjistí, zda jde matchnout číselnou hodnotu pro aktuální offset.
-	 * @return Fail|Token
+	 * @param string $src
+	 * @param int $offset
+	 * @param array<string, Combinator> $bank
+	 * @return array{0: false|Token, 1: array<string, int>}
 	 */
 	function scan($src, $offset, array $bank)
 	{
@@ -69,6 +82,11 @@ class OneOf implements Combinator
 
 
 
+	/**
+	 * @param array<Combinator|Ref> $xs
+	 * @param int $offset
+	 * @return array<string, int>
+	 */
 	private static function buildExpected(array $xs, $offset)
 	{
 		$ret = [];

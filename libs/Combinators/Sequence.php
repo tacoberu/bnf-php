@@ -22,9 +22,17 @@ class Sequence implements Combinator
 
 	use BaseCombinator;
 
+	/**
+	 * @var array<Combinator>
+	 */
 	private $items;
 
 
+	/**
+	 * @param string $name
+	 * @param array<Combinator> $options
+	 * @param bool $capture
+	 */
 	function __construct($name, array $options, $capture = True)
 	{
 		self::assertOptionsCount($options);
@@ -35,6 +43,9 @@ class Sequence implements Combinator
 
 
 
+	/**
+	 * @return array<string>
+	 */
 	function getExpectedNames()
 	{
 		if ($this->name) {
@@ -54,7 +65,11 @@ class Sequence implements Combinator
 	 * - žádné matchnutí = [false, [$name]]
 	 * - matchnutí části = [False, [$name té části]]
 	 * - úspěšné matchnutí všeho, konec nás nezajímá = [Token, []]
-	 * @return [False, $expected]|[Token, $expected]
+	 *
+	 * @param string $src
+	 * @param int $offset
+	 * @param array<string, Combinator> $bank
+	 * @return array{0: false|Token, 1: array<string, int>}
 	 */
 	function scan($src, $offset, array $bank)
 	{
@@ -93,6 +108,13 @@ class Sequence implements Combinator
 
 
 
+	/**
+	 * @param string $default
+	 * @param array<Combinator> $options
+	 * @param int $index
+	 * @param int $offset
+	 * @return array<string, int>
+	 */
 	private static function buildExpected($default, $options, $index, $offset)
 	{
 		$names = $options[$index]->getExpectedNames();
@@ -111,6 +133,10 @@ class Sequence implements Combinator
 
 
 
+	/**
+	 * @param array<Combinator> $xs
+	 * @return void
+	 */
 	private static function assertOptionsCount(array $xs)
 	{
 		if (count($xs) < 2) {

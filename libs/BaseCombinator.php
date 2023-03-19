@@ -10,13 +10,25 @@ namespace Taco\BNF;
 trait BaseCombinator
 {
 
+	/**
+	 * @var string
+	 */
 	private $name;
 
+	/**
+	 * @var bool
+	 */
 	private $capture;
 
+	/**
+	 * @var bool
+	 */
 	private $optional = False;
 
 
+	/**
+	 * @return string
+	 */
 	function getName()
 	{
 		return $this->name;
@@ -24,6 +36,10 @@ trait BaseCombinator
 
 
 
+	/**
+	 * @param string $val
+	 * @return self
+	 */
 	function setName($val)
 	{
 		$inst = clone $this;
@@ -33,6 +49,9 @@ trait BaseCombinator
 
 
 
+	/**
+	 * @return self
+	 */
 	function setOptional()
 	{
 		$inst = clone $this;
@@ -42,6 +61,9 @@ trait BaseCombinator
 
 
 
+	/**
+	 * @return bool
+	 */
 	function isCapture()
 	{
 		return $this->capture;
@@ -49,6 +71,9 @@ trait BaseCombinator
 
 
 
+	/**
+	 * @return bool
+	 */
 	function isOptional()
 	{
 		return $this->optional;
