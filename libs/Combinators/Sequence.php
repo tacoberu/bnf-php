@@ -78,6 +78,7 @@ class Sequence implements Combinator
 		$prevExpected = [];
 		foreach ($this->items as $i => $node) {
 			if ($node instanceof Ref) {
+				// @TODO Test do SequenceTest
 				$node = $bank[$node->name];
 			}
 			else {
@@ -92,6 +93,7 @@ class Sequence implements Combinator
 					return [False, array_merge($prevExpected, $expected)];
 				}
 				if (count($prevExpected)) {
+					// @TODO Neotestováno
 					return [False, $prevExpected];
 				}
 				return [False, self::buildExpected($this->name, $this->items, $i, $offset)];
@@ -103,17 +105,19 @@ class Sequence implements Combinator
 
 		$first = reset($res);
 		$last = end($res);
-		if (is_bool($first)) {
+		if ($first === False) {
+			// @TODO Neotestováno
 			throw new LogicException("Sequence combinator must containt minimal two items. (first)");
 		}
-		if (is_bool($last)) {
+		if ($last === False) {
+			// @TODO Neotestováno
 			throw new LogicException("Sequence combinator must containt minimal two items. (last)");
 		}
 		$res = Utils::filterCapture($res);
 		//~ $res = Utils::flatting($res);
-		if (empty($this->getName()) && count($res) == 1) {
-//			return [reset($res), []];
-		}
+		//~ if (empty($this->getName()) && count($res) == 1) {
+			//~ return [reset($res), []];
+		//~ }
 
 		// vrácený token má rozsah části $src, který skutečně zpracoval. Včetně nezapočítaných tokenů,
 		// které nejsou ve výsledku. Tudíž token může mít start:stop 5:10, a vlastnit token, který bude 6:9.
