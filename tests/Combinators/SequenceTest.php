@@ -187,23 +187,19 @@ class SequenceTest extends TestCase
 
 		$src = '[Token "ahoj"]';
 		list($ast,) = $parser->scan($src, 0, []);
-//~ dump($ast->content[0]);
 		$this->assertSame('Collection', $ast->getName());
 		$this->assertSame(1, count($ast->content));
 		$this->assertSame(1, count($ast->content[0]->content));
 		$node = $ast->content[0]->content[0];
-//~ dump($node);
 		$this->assertSame('Element', $node->getName());
 		$this->assertSame('Token "ahoj"', (string) $node);
 
 		$src = '[Token]';
 		list($ast,) = $parser->scan($src, 0, []);
-//~ dump($ast->content[0]);
 		$this->assertSame('Collection', $ast->getName());
 		$this->assertSame(1, count($ast->content));
 		$this->assertSame(1, count($ast->content[0]->content));
 		$node = $ast->content[0]->content[0];
-//~ dump($node);
 		$this->assertSame('Element', $node->getName());
 		$this->assertSame('Token', (string) $node);
 	}
@@ -223,7 +219,7 @@ class SequenceTest extends TestCase
 
 
 
-	function _testSample10()
+	function testSample10()
 	{
 		$sep = new Whitechars(Null, False);
 		$parser = (new Sequence(Null, [
@@ -235,10 +231,9 @@ class SequenceTest extends TestCase
 
 		$src = ' "Token ahoj"' . "\n\n\nx";
 		list($ast, $expec) = $parser->scan($src, 0, []);
-		dump($expec);
-		dump($ast);
-		$this->assertSame('Name', $ast->getName());
-		dump(strlen($src));
+		$this->assertNull($ast->getName());
+		$this->assertSame(['Name'], $ast->type->getExpectedNames());
+		$this->assertSame([], $expec);
 	}
 
 
