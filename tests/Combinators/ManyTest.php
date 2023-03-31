@@ -36,7 +36,7 @@ class ManyTest extends TestCase
 
 		$src = 'col : Param col2: Value';
 		list($token,) = $parser->scan($src, 0, []);
-		$this->assertSame('col : Paramcol2: Value', (string) $token);
+		$this->assertSame('col : Param col2: Value', (string) $token);
 	}
 
 

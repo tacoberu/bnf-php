@@ -195,8 +195,8 @@ welcome = Welcome, {$name}, to {-brand-name}!
 		list($token, $expected) = $parser->scan($input, 0, []);
 		$this->assertEquals([], $expected);
 		$this->assertCount(2, $token->content);
-		$this->assertEquals("author John Dee", (string)$token->content[0]);
-		$this->assertEquals("package Project", (string)$token->content[1]);
+		$this->assertEquals(" author John Dee", (string)$token->content[0]);
+		$this->assertEquals(" package Project", (string)$token->content[1]);
 		$this->assertEquals("author", (string)$token->content[0]->content[0]);
 		$this->assertEquals("John Dee", (string)$token->content[0]->content[1]);
 	}
@@ -227,9 +227,9 @@ welcome = Welcome, {$name}, to {-brand-name}!
 		$this->assertEquals(0, $token->start);
 		$this->assertEquals(69, $token->end);
 		$this->assertCount(3, $token->content);
-		$this->assertEquals("author John Dee", (string)$token->content[0]);
-		$this->assertEquals("package Project", (string)$token->content[1]);
-		$this->assertEquals("email name@domain.tld\n\t\t", (string)$token->content[2]);
+		$this->assertEquals("    author John Dee", (string)$token->content[0]);
+		$this->assertEquals("    package Project", (string)$token->content[1]);
+		$this->assertEquals("    email name@domain.tld\n\t\t", (string)$token->content[2]);
 		$this->assertEquals("author", (string)$token->content[0]->content[0]);
 		$this->assertEquals("John Dee", (string)$token->content[0]->content[1]);
 	}
@@ -281,8 +281,8 @@ welcome = Welcome, {$name}, to {-brand-name}!
 		$this->assertCount(2, $token->content);
 		$this->assertEquals(0, $token->start);
 		$this->assertEquals(41, $token->end);
-		$this->assertEquals("author John Dee", (string)$token->content[0]);
-		$this->assertEquals("package Project\t", (string)$token->content[1]);
+		$this->assertEquals("     author John Dee", (string)$token->content[0]);
+		$this->assertEquals("     package Project\t", (string)$token->content[1]);
 		$this->assertEquals("author", (string)$token->content[0]->content[0]);
 		$this->assertEquals("John Dee", (string)$token->content[0]->content[1]);
 	}
@@ -359,7 +359,7 @@ welcome = Welcome, {$name}, to {-brand-name}!
 		$this->assertEquals("author", (string)$token->content[0]->content[1]->content[0]);
 		$this->assertEquals('"John Dee"', (string)$token->content[0]->content[1]->content[1]);
 		$this->assertEquals("sub", (string)$token->content[0]->content[2]->content[0]);
-		$this->assertEquals("a  Num", (string)$token->content[0]->content[2]->content[1]);
+		$this->assertEquals("      a  Num     ", (string)$token->content[0]->content[2]->content[1]);
 	}
 
 }

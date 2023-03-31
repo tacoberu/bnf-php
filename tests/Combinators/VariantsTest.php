@@ -54,7 +54,7 @@ class VariantsTest extends TestCase
 		$parser = new Variants('foo', [$num, $sep], [$num]);
 		$src = '1 2 3 xsf';
 		list($ast, $expected) = $parser->scan($src, 0, []);
-		$this->assertSame('1 2 3', (string) $ast);
+		$this->assertSame('1 2 3 ', (string) $ast);
 		$this->assertEquals(0, $ast->start);
 		$this->assertEquals(6, $ast->end);
 		$this->assertCount(3, $ast->content);

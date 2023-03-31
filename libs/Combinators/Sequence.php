@@ -110,7 +110,7 @@ class Sequence implements Combinator
 			throw new LogicException("Sequence combinator must containt minimal two items. (last)");
 		}
 		$res = Utils::filterCapture($res);
-		$res = Utils::flatting($res);
+		//~ $res = Utils::flatting($res);
 		if (empty($this->getName()) && count($res) == 1) {
 //			return [reset($res), []];
 		}

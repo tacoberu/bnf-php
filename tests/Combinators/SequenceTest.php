@@ -218,7 +218,7 @@ class SequenceTest extends TestCase
 
 		$src = ' "Token ahoj"';
 		list($ast,) = $parser->scan($src, 0, []);
-		$this->assertSame('Name', $ast->getName());
+		$this->assertNull($ast->getName());
 	}
 
 
