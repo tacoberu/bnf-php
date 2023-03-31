@@ -79,7 +79,8 @@ class Utils
 
 
 	/**
-	 * Odstraní ty, které se nemamí pamatovat.
+	 * Odstraní ty, které se nemají pamatovat.
+	 *
 	 * @param array<Token> $res
 	 * @return array<Token>
 	 */
