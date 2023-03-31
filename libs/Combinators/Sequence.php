@@ -115,6 +115,8 @@ class Sequence implements Combinator
 //			return [reset($res), []];
 		}
 
+		// vrácený token má rozsah části $src, který skutečně zpracoval. Včetně nezapočítaných tokenů,
+		// které nejsou ve výsledku. Tudíž token může mít start:stop 5:10, a vlastnit token, který bude 6:9.
 		return [new Token($this, $res, $first->start, $last->end), []];
 	}
 
