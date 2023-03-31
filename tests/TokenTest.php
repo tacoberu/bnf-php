@@ -28,22 +28,38 @@ class TokenTest extends TestCase
 					new Token($ptn, 'col', 0, 3),
 					new Token($ptn, '=', 5, 6),
 					new Token($ptn, ':prop', 7, 10),
-				], 0, 5)],
+				], 0, 10)],
 			['col = :prop', new Token($seq, [
 					new Token($ptn, 'col', 0, 3),
 					new Token($ptn, '=', 4, 5),
 					new Token($ptn, ':prop', 6, 10),
-				], 0, 5)],
+				], 0, 10)],
 			['col = :prop', new Token($seq, [
 					new Token($ptn, 'col', 0, 3),
 					new Token($ptn, '=', 4, 7),
 					new Token($ptn, ':prop', 8, 10),
-				], 0, 5)],
+				], 0, 10)],
 			['aaa bbb ccc', new Token($var, [
 					new Token($ptn, 'aaa', 0, 3),
 					new Token($ptn, 'bbb', 4, 10),
 					new Token($ptn, 'ccc', 11, 15),
-				], 0, 5)],
+				], 0, 15)],
+			[' bbb ccc', new Token($var, [
+					new Token($ptn, 'bbb', 4, 10),
+					new Token($ptn, 'ccc', 11, 15),
+				], 3, 15)],
+			[' bbb ccc ', new Token($var, [
+					new Token($ptn, 'bbb', 4, 10),
+					new Token($ptn, 'ccc', 11, 15),
+				], 3, 16)],
+			[' bbb xyz ', new Token($var, [
+					new Token($ptn, 'bbb', 4, 10),
+					' xyz',
+				], 3, 16)],
+			[' bbb xyz  ', new Token($var, [
+					new Token($ptn, 'bbb', 4, 10),
+					' xyz',
+				], 3, 17)],
 		];
 	}
 
@@ -57,4 +73,23 @@ class TokenTest extends TestCase
 		$this->assertEquals($expected, (string) $ast);
 	}
 
+
+
+	function testToStringExmper()
+	{
+		$foo = new Match('foo', ['a', 'b']);
+		$token = new Token($foo, [
+			new Token($foo, '"ahoj"', 6, 12),
+		], 5, 12);
+		$this->assertSame(' "ahoj"', (string) $token);
+	}
+
+
+
+	function _testIndexByName()
+	{
+		$foo = new Match('foo', ['a', 'b']);
+		$token = new Token($foo, []);
+		dump($token['foo']);
+	}
 }
