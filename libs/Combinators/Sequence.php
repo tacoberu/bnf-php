@@ -61,10 +61,10 @@ class Sequence implements Combinator
 
 
 	/**
-	 * Zjistí, zda jde matchnout číselnou hodnotu pro aktuální offset.
-	 * - žádné matchnutí = [false, [$name]]
-	 * - matchnutí části = [False, [$name té části]]
-	 * - úspěšné matchnutí všeho, konec nás nezajímá = [Token, []]
+	 * Checks if the numeric value for the current offset can be matched.
+	 * - no match = [false, [$name]]
+	 * - match part = [False, [$name of that part]]
+	 * - successful matching of everything, we don't care about the end = [Token, []]
 	 *
 	 * @param string $src
 	 * @param int $offset
@@ -92,6 +92,7 @@ class Sequence implements Combinator
 					return [False, array_merge($prevExpected, $expected)];
 				}
 				if (count($prevExpected)) {
+					// @TODO without test
 					return [False, $prevExpected];
 				}
 				return [False, self::buildExpected($this->name, $this->items, $i, $offset)];
@@ -104,9 +105,11 @@ class Sequence implements Combinator
 		$first = reset($res);
 		$last = end($res);
 		if (is_bool($first)) {
+			// @TODO without test
 			throw new LogicException("Sequence combinator must containt minimal two items. (first)");
 		}
 		if (is_bool($last)) {
+			// @TODO without test
 			throw new LogicException("Sequence combinator must containt minimal two items. (last)");
 		}
 		$res = Utils::filterCapture($res);
@@ -115,6 +118,8 @@ class Sequence implements Combinator
 			return [reset($res), []];
 		}
 
+		// The returned token has the scope of the $src part it actually processed. Including unaccounted tokens,
+		// which are not in the result. So a token can have a start:stop of 5:10, and own a token that will be 6:9.
 		return [new Token($this, $res, $first->start, $last->end), []];
 	}
 

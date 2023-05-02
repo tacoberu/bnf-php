@@ -15,7 +15,7 @@ use LogicException;
 
 
 /**
- * Opakující se vzor.
+ * A repeating pattern without separator.
  */
 class Many implements Combinator
 {
@@ -56,11 +56,6 @@ class Many implements Combinator
 
 
 	/**
-	 * Zjistí, zda jde matchnout číselnou hodnotu pro aktuální offset.
-	 * - žádné matchnutí = [false, [$name]]
-	 * - úspěšné matchnutí, ale ještě nejsme na konci = [Token, [$name]]
-	 * - úspěšné matchnutí, a jsme na konci = [Token, []]
-	 *
 	 * @param string $src
 	 * @param int $offset
 	 * @param array<string, Combinator> $bank
@@ -88,7 +83,7 @@ class Many implements Combinator
 		$start = reset($res)->start;
 		$last = end($res)->end;
 
-		// Úspěšné matchnutí, ale ještě nejsme na konci = [Token, [$name]]
+		// Successful match, but we're not done yet = [Token, [$name]]
 		if (empty($expected) && strlen($src) > ($offset + 1)) {
 			$expected = [$this->getName() => $last];
 		}

@@ -14,14 +14,14 @@ class Utils
 {
 
 	/**
-	 * Na $src se zpracují regulární výrazi a v při prvním úspěchu to vrátí vytvořený
-	 * token $typu. Defaultně přistupuje ke všem patternům jako kdyby byly ukotveny k začátku. Viz
-	 * přepínač $checkStart.
+	 * Regular expressions will be processed on $src and v will return the created one on first success
+	 * $type token. By default, it approaches all patterns as if they were anchored to the beginning. See
+	 * $checkStart switch.
 	 *
-	 * @param array<string> $patterns Kolekce regulárních výrazů.
+	 * @param array<string> $patterns A collection of regular expressions.
 	 * @param string $src
 	 * @param int $offset
-	 * @param bool $checkStart Umožní samoposun. Například číslo pro $src: "abcds123" a $offset: 3 to najde shodu. Ale až od pozice 5.
+	 * @param bool $checkStart Enables self scrolling. For example a number for $src: "abcds123" and $offset: 3 it will find a match. But only from position 5.
 	 * @return Token|False
 	 */
 	static function scanPattern(Combinator $type, array $patterns, $src, $offset, $checkStart = True)
@@ -79,7 +79,8 @@ class Utils
 
 
 	/**
-	 * Odstraní ty, které se nemamí pamatovat.
+	 * It removes the ones that are not meant to be remembered.
+	 *
 	 * @param array<Token> $res
 	 * @return array<Token>
 	 */
@@ -131,9 +132,10 @@ class Utils
 
 
 	/**
-	 * Mějme definovaný blok, kde začátek je definovaný pomocí $start a konec
-	 * pomocí $end. Vrátí nám indexy startu a konce. Přičemž zohledňuje zanoření.
-	 * @TODO Neumí escapovat.
+	 * Let's have a defined block where the beginning is defined by $start
+	 * and the end by $end. It will return us the start and end indices.
+	 * While taking into account immersion.
+	 * @TODO He can't escape.
 	 *
 	 * @param string $startmarker
 	 * @param string $endmarker

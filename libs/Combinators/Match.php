@@ -12,6 +12,9 @@ use Taco\BNF\BaseCombinator;
 use Taco\BNF\Combinator;
 
 
+/**
+ * Match the listed patterns.
+ */
 class Match_ implements Combinator
 {
 
@@ -68,7 +71,6 @@ class Match_ implements Combinator
 
 
 	/**
-	 * Zjistí, zda jde matchnout číselnou hodnotu pro aktuální offset.
 	 * @param string $src
 	 * @param int $offset
 	 * @param array<string, Combinator> $bank

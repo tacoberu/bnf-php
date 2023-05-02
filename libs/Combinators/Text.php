@@ -13,7 +13,7 @@ use Taco\BNF\Combinator;
 
 
 /**
- * Jedná o se o text, kteý začíná ", nebo ' a končí patřičným. A přičemž zohlednuje escapování uvozovek.
+ * This is a text that starts with ", or ' and ends with the appropriate one. And while taking into account the escape of quotation marks.
  */
 class Text implements Combinator
 {

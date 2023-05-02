@@ -15,9 +15,9 @@ use LogicException;
 
 
 /**
- * Máme několik možností, které se navzájem střídají. Můžeme rozlišit, které
- * mají být na začátku, a které na konci. Nemohou být zvoleny dvě stejné za sebou - musí se střídat.
- * Můžeme určit minimální a maximální počet, aby to bylo validní.
+ * We have several options that alternate with each other. We can distinguish which
+ * should be at the beginning, and which should be at the end. Two identical ones cannot be selected in a row - they must alternate.
+ * We can specify a minimum and maximum number for this to be valid.
  */
 class Variants implements Combinator
 {
@@ -40,12 +40,12 @@ class Variants implements Combinator
 	private $last;
 
 	/**
-	 * @var ?int Pokud je uveden, očekává se minimálně $min prvků.
+	 * @var ?int If specified, a minimum of $min elements is expected.
 	 */
 	private $min;
 
 	/**
-	 * @var ?int Pokud je uveden, očekává se maximálně $max prvků.
+	 * @var ?int If specified, a maximum of $max elements is expected.
 	 */
 	private $max;
 
@@ -70,8 +70,8 @@ class Variants implements Combinator
 
 
 	/**
-	 * @param ?int $min Pokud je uveden, očekává se minimálně $min prvků.
-	 * @param ?int $max Pokud je uveden, očekává se maximálně $max prvků.
+	 * @param ?int $min If specified, a maximum of $min elements is expected.
+	 * @param ?int $max If specified, a maximum of $max elements is expected.
 	 * @return self
 	 */
 	function setBoundary($min, $max)
@@ -101,11 +101,6 @@ class Variants implements Combinator
 
 
 	/**
-	 * Zjistí, zda jde matchnout číselnou hodnotu pro aktuální offset.
-	 * - žádné matchnutí = [false, [$name]]
-	 * - úspěšné matchnutí, ale ještě nejsme na konci = [Token, [$name]]
-	 * - úspěšné matchnutí, a jsme na konci = [Token, []]
-	 *
 	 * @param string $src
 	 * @param int $offset
 	 * @param array<string, Combinator> $bank
@@ -117,7 +112,7 @@ class Variants implements Combinator
 		$res = [];
 		list($token, $expected, $sel) = self::parseFrom($this->first, null, $src, $offset, $bank);
 
-		// Zádné matchnutí
+		// No match
 		if ( ! $token) {
 			return [False, count($expected) ? $expected : self::buildExpected($this->first, $offset)];
 		}
@@ -137,12 +132,12 @@ class Variants implements Combinator
 			$offset = $token->end;
 		}
 
-		// Poslední odebereme a nahradíme podle vzoru $last. Odebrat můžem i více, protože více jich může neodpovídat $last.
+		// We will remove the last one and replace it according to the $last pattern. I can remove more as more may not match $last.
 		while (count($res)) {
-			// Odstranit poslední.
+			// Delete the last one.
 			$last = array_pop($res);
 
-			// A přidat znova
+			// And add again
 			list($token, ) = self::parseFrom($this->last, null, $src, $last->start, $bank);
 			if ($token) {
 				$res[] = $token;
@@ -151,16 +146,16 @@ class Variants implements Combinator
 		}
 
 		if (empty($res)) {
-			// Získali jsme jen jeden záznam. Ten odpovídá množině prvních, ale neodpovídá množině poslední.
+			// We only got one record. The latter corresponds to the set of the former, but does not correspond to the set of the latter.
 			return [False, count($expected) ? $expected : self::buildExpected($this->last, $offset)];
 		}
 
 		$last = end($res);
 
-		// Úspěšné matchnutí, a jsme na konci = [Token, []]
+		// Successful match, and we're done = [Token, []]
 		//~ $expected = [];
 
-		// Úspěšné matchnutí, ale ještě nejsme na konci = [Token, [$name]]
+		// Successful match, but we're not done yet = [Token, [$name]]
 		if (empty($expected) && strlen($src) > ($offset + 1)) {
 			$expected = self::buildExpected($this->last, $last->end);
 		}
@@ -169,12 +164,12 @@ class Variants implements Combinator
 		$res = Utils::flatting($res);
 
 		if ($this->min && count($res) < $this->min) {
-			// Získali jsme méně jak požadovaný počet záznamů.
+			// We have received less than the required number of records.
 			return [False, self::buildExpected($this->options, $offset)];
 		}
 
 		if ($this->max && count($res) > $this->max) {
-			// Získali jsme více jak požadovaný počet záznamů.
+			// We have received more than the required number of records.
 			return [False, self::buildExpected($this->options, $offset)];
 		}
 

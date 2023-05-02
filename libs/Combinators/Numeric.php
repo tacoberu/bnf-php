@@ -12,6 +12,9 @@ use Taco\BNF\BaseCombinator;
 use Taco\BNF\Combinator;
 
 
+/**
+ * A number with a decimal point and a sign.
+ */
 class Numeric implements Combinator
 {
 

@@ -14,7 +14,7 @@ use Taco\BNF\Utils;
 
 
 /**
- * Máme několik možností, ale vybere se pouze jedna.
+ * We have several options, but only one is selected.
  */
 class OneOf implements Combinator
 {
