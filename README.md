@@ -1,8 +1,12 @@
-A PHP BNF like parser [![Build Status][travisimage]][travislink]
-================================================================
+A PHP BNF like parser
+=====================
 
 [travisimage]: https://travis-ci.org/tacoberu/bnf-php.svg?branch=master
 [travislink]: https://travis-ci.org/tacoberu/bnf-php
+[![Latest Stable Version](http://poser.pugx.org/tacoberu/bnf/v)](https://packagist.org/packages/tacoberu/bnf)
+[![Latest Unstable Version](http://poser.pugx.org/tacoberu/bnf/v/unstable)](https://packagist.org/packages/tacoberu/bnf)
+[![PHP Version Require](http://poser.pugx.org/tacoberu/bnf/require/php)](https://packagist.org/packages/tacoberu/bnf)
+[![License](http://poser.pugx.org/tacoberu/bnf/license)](https://packagist.org/packages/tacoberu/bnf)
 
 This is a PHP implementation of BNF like parser.
 
