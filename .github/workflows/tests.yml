@@ -11,25 +11,25 @@ jobs:
         strategy:
             matrix:
                 os: [ubuntu-latest, windows-latest]
-                php: ['7.4', '8.0', '8.1', '8.2']
+                php: ['5.6', '7.1', '7.2', '7.4']
             fail-fast: false
 
         name: PHP ${{ matrix.php }} tests on ${{ matrix.os }}
         steps:
             - name: Checkout
-                uses: actions/checkout@v2
+              uses: actions/checkout@v2
 
             - name: Setup PHP
-                uses: shivammathur/setup-php@v2
-                with:
-                    coverage: "none"
-                    extensions: "apcu, intl, mbstring"
-                    ini-values: "memory_limit=-1, session.gc_probability=0, apc.enable_cli=1"
-                    php-version: "${{ matrix.php }}"
-                    tools: "composer:v2"
+              uses: shivammathur/setup-php@v2
+              with:
+                  coverage: "none"
+                  extensions: "apcu, intl, mbstring"
+                  ini-values: "memory_limit=-1, session.gc_probability=0, apc.enable_cli=1"
+                  php-version: "${{ matrix.php }}"
+                  tools: "composer:v2"
 
             - name: Install dependencies
-                run: composer --prefer-source --no-progress --ansi install
+              run: composer --prefer-source --no-progress --ansi install
 
             - name: Run tests
-                run: vendor/bin/phpunit --printer=Codedungeon\\PHPUnitPrettyResultPrinter\\Printer
+              run: vendor/bin/phpunit --printer=Codedungeon\\PHPUnitPrettyResultPrinter\\Printer

@@ -11,10 +11,9 @@
 	"license": "MIT",
 	"keywords":  ["parser", "bnf", "abnf", "ebnf", "lexer", "tokenizer", "ast"],
 	"require": {
-		"php" : ">=5.3.3"
+		"php" : ">=5.3.3 <8.0.0"
 	},
     "require-dev": {
-		"php": ">=7.4",
 		"phpunit/phpunit": "~7.0",
         "tracy/tracy": "^2.0",
 		"phpstan/phpstan": "*",
