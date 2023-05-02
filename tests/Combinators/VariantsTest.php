@@ -101,9 +101,9 @@ class VariantsTest extends TestCase
 		$num = new Numeric('num');
 		$sep = new Whitechars(Null);
 		$symbol = new OneOf('symbol', [
-			new Match('symbol-like', ['LIKE']),
-			new Match('symbol-like', ['ILIKE']),
-			new Match('symbol-match', ['MATCH']),
+			new Match_('symbol-like', ['LIKE']),
+			new Match_('symbol-like', ['ILIKE']),
+			new Match_('symbol-match', ['MATCH']),
 		]);
 		$parser = new Variants('foo', [$num, $sep, $symbol], [$num, $symbol], [$num, $symbol]);
 		$src = 'x 2 3 xsf';
@@ -150,7 +150,7 @@ class VariantsTest extends TestCase
 	function testMatchButNoAll3()
 	{
 		$num = new Numeric('num');
-		$symbol = new Match('symbol', ['@']);
+		$symbol = new Match_('symbol', ['@']);
 		$sep = new Whitechars(Null);
 		$parser = new Variants('foo', [$num, $symbol, $sep], [$num, $symbol], [$num, $symbol]);
 		$src = '1 2 3 @ a b';
@@ -167,9 +167,9 @@ class VariantsTest extends TestCase
 	{
 		$num = new Numeric('num');
 		$symbol = new OneOf('symbol', [
-			new Match('symbol-like', ['LIKE']),
-			new Match('symbol-like', ['ILIKE']),
-			new Match('symbol-match', ['MATCH']),
+			new Match_('symbol-like', ['LIKE']),
+			new Match_('symbol-like', ['ILIKE']),
+			new Match_('symbol-match', ['MATCH']),
 		]);
 		$sep = new Whitechars(Null);
 		$parser = new Variants('foo', [$num, $symbol, $sep], [$num, $symbol], [$num, $symbol]);
@@ -187,9 +187,9 @@ class VariantsTest extends TestCase
 	{
 		$num = new Numeric('num');
 		$symbol = new OneOf(Null, [
-			new Match('symbol-like', ['LIKE']),
-			new Match('symbol-like', ['ILIKE']),
-			new Match('symbol-match', ['MATCH']),
+			new Match_('symbol-like', ['LIKE']),
+			new Match_('symbol-like', ['ILIKE']),
+			new Match_('symbol-match', ['MATCH']),
 		]);
 		$sep = new Whitechars(Null);
 		$parser = new Variants('foo', [$num, $symbol, $sep], [$num, $symbol], [$num, $symbol]);

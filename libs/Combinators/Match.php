@@ -12,7 +12,7 @@ use Taco\BNF\BaseCombinator;
 use Taco\BNF\Combinator;
 
 
-class Match implements Combinator
+class Match_ implements Combinator
 {
 
 	use BaseCombinator;

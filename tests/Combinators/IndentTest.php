@@ -346,7 +346,7 @@ dva: deux
 			new Pattern('choice-start', ['~\{\s*~'], False),
 			new Pattern('choice-id', ['~' . $symbol . '~']),
 			$sep,
-			new Match('assign', ['->'], False),
+			new Match_('assign', ['->'], False),
 			new Indent('choice-content', new Sequence(Null, [
 				$nl,
 				$options,
@@ -356,7 +356,7 @@ dva: deux
 		$msg = new Sequence('root-node', [
 			new Pattern('id', ['~' . $symbol . '~']),
 			$sep,
-			new Match('assign', ['='], False),
+			new Match_('assign', ['='], False),
 			$sep,
 			new Indent('root-node-message', new Variants('message', [
 				$choice,
@@ -388,7 +388,7 @@ dva: deux
 			$nl,
 		]);
 		$choice = new Sequence('choice', [
-			new Match('abc', ['{trois ->']),
+			new Match_('abc', ['{trois ->']),
 			$nl,
 			$options,
 			new Pattern('text', ['~\s*\}~'])
@@ -403,7 +403,7 @@ dva: deux
 		$msg = new Sequence('msg', [
 			new Pattern('id', ['~[a-z]+~']),
 			$sep,
-			new Match('assign', ['='], False),
+			new Match_('assign', ['='], False),
 			$sep,
 			new Indent(Null, $value),
 		]);
@@ -419,7 +419,7 @@ dva: deux
 	private function getChoiceOption()
 	{
 		return new Sequence('choice-option', [
-			new Match('default?', [' ', '*']),
+			new Match_('default?', [' ', '*']),
 			new Pattern('opt', ['~\[\s*[a-zA-Z\-]+\s*\]\s*~']),
 			new Indent(Null, new Pattern('text', ['~.+~s'])),
 		]);
@@ -499,7 +499,7 @@ dva: deux
 			new Pattern('select-start', ['~\{\s*~'], False),
 			new Pattern('select-identifier', ['~' . $symbol . '~']),
 			$sep,
-			new Match('assign', ['->'], False),
+			new Match_('assign', ['->'], False),
 			new Indent(Null, new Sequence(Null, [
 				$nl,
 				$selectOptions,
@@ -514,7 +514,7 @@ dva: deux
 		$message = new Sequence('message', [
 			new Pattern('identifier', ['~' . $symbol . '~']),
 			$sep,
-			new Match('assign', ['='], False),
+			new Match_('assign', ['='], False),
 			$sep,
 			new Indent('pattern', $messageContent, $skipIndent),
 		]);
@@ -990,7 +990,7 @@ dix = onze
 			$nl,
 		]);
 		$def = new Sequence(Null, [
-			new Match('abc', ['{trois ->']),
+			new Match_('abc', ['{trois ->']),
 			$nl,
 			$choice,
 		]);
@@ -1037,7 +1037,7 @@ dix = onze
 			$nl,
 		]);
 		$choice = new Sequence('choice', [
-			new Match('abc', ['{trois ->']),
+			new Match_('abc', ['{trois ->']),
 			$nl,
 			$options,
 			new Pattern('text', ['~\s*\}~'])

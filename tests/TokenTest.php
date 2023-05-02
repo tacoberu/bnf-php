@@ -11,7 +11,7 @@ use LogicException;
 use Taco\BNF\Combinators\Sequence;
 use Taco\BNF\Combinators\Pattern;
 use Taco\BNF\Combinators\Variants;
-use Taco\BNF\Combinators\Match;
+use Taco\BNF\Combinators\Match_;
 
 
 class TokenTest extends TestCase
@@ -19,7 +19,7 @@ class TokenTest extends TestCase
 
 	function dataToString()
 	{
-		$fake = new Match(Null, ['a', 'b']);
+		$fake = new Match_(Null, ['a', 'b']);
 		$var = new Variants(Null, [$fake, $fake]);
 		$seq = new Sequence(Null, [$fake, $fake]);
 		$ptn = new Pattern(Null, []);

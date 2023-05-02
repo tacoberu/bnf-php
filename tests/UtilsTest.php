@@ -11,7 +11,7 @@ use LogicException;
 use Taco\BNF\Combinators\Sequence;
 use Taco\BNF\Combinators\Pattern;
 use Taco\BNF\Combinators\Variants;
-use Taco\BNF\Combinators\Match;
+use Taco\BNF\Combinators\Match_;
 
 
 class UtilsTest extends TestCase
@@ -194,7 +194,7 @@ class UtilsTest extends TestCase
 
 	function testFilterCapture_Noop()
 	{
-		$src = [new Token(new Match(Null, ['A']), 'A', 0, 1)];
+		$src = [new Token(new Match_(Null, ['A']), 'A', 0, 1)];
 		$this->assertSame($src, Utils::filterCapture($src));
 	}
 
@@ -204,15 +204,15 @@ class UtilsTest extends TestCase
 	{
 		$src = [
 			new Token(new Sequence(Null, [
-				new Match(Null, ['<'], False),
-				new Match(Null, ['A']),
-				new Match(Null, ['>'], False),
+				new Match_(Null, ['<'], False),
+				new Match_(Null, ['A']),
+				new Match_(Null, ['>'], False),
 				], False), 'A', 2, 3),
-			new Token(new Match(Null, ['A']), 'A', 1, 3),
+			new Token(new Match_(Null, ['A']), 'A', 1, 3),
 		];
 
 		$this->assertEquals([
-			new Token(new Match(Null, ['A']), 'A', 1, 3)
+			new Token(new Match_(Null, ['A']), 'A', 1, 3)
 			]
 			, Utils::filterCapture($src));
 	}
@@ -229,7 +229,7 @@ class UtilsTest extends TestCase
 
 	function testFlatting_Noop()
 	{
-		$src = [new Token(new Match(Null, ['A']), 'A', 0, 1)];
+		$src = [new Token(new Match_(Null, ['A']), 'A', 0, 1)];
 		$this->assertSame($src, Utils::flatting($src));
 	}
 
@@ -238,12 +238,12 @@ class UtilsTest extends TestCase
 	function testFlatting()
 	{
 		$src = [new Token(new Sequence(Null, [
-			new Match(Null, ['<'], False),
-			new Match(Null, ['A']),
-			new Match(Null, ['>'], False),
-			]), [new Token(new Match(Null, ['A']), 'A', 1, 2)], 1, 3)];
+			new Match_(Null, ['<'], False),
+			new Match_(Null, ['A']),
+			new Match_(Null, ['>'], False),
+			]), [new Token(new Match_(Null, ['A']), 'A', 1, 2)], 1, 3)];
 		$this->assertEquals([
-			new Token(new Match(Null, ['A']), 'A', 1, 3)
+			new Token(new Match_(Null, ['A']), 'A', 1, 3)
 			]
 			, Utils::flatting($src));
 	}

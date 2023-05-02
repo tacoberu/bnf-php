@@ -10,7 +10,7 @@ use PHPUnit\Framework\TestCase;
 use LogicException;
 use Taco\BNF\Combinators\Whitechars;
 use Taco\BNF\Combinators\Pattern;
-use Taco\BNF\Combinators\Match;
+use Taco\BNF\Combinators\Match_;
 use Taco\BNF\Combinators\Many;
 use Taco\BNF\Combinators\Sequence;
 use Taco\BNF\Combinators\Variants;
@@ -36,7 +36,7 @@ class ExhibitionTest extends TestCase
 					'~NOT\s+LIKE~i',
 					'~NOT\s+IN~i',
 				]),
-				new Match(Null, [
+				new Match_(Null, [
 					'LIKE',
 					'IN',
 					'==',
@@ -157,7 +157,7 @@ welcome = Welcome, {$name}, to {-brand-name}!
 			new Sequence('element', [
 				new Pattern('id', ['~[a-z\-]+~']),
 				new Whitechars(Null, False),
-				new Match(Null, ['='], False),
+				new Match_(Null, ['='], False),
 				new Whitechars(Null, False),
 				new Pattern('element', ['~[^\n]+~']),
 			]),
@@ -185,7 +185,7 @@ welcome = Welcome, {$name}, to {-brand-name}!
 			new Pattern(Null, ['~[\t ]+~'], False),
 			new Sequence('anotation', [
 				(new Whitechars(Null, False))->setOptional(),
-				new Match(Null, ['@'], False),
+				new Match_(Null, ['@'], False),
 				new Pattern('name', ['~[a-z][a-zA-Z0-9\-]*~']),
 				new Pattern(Null, ['~[\t ]+~'], False),
 				new Pattern('value', ['~[^\n]+~s']),
@@ -215,7 +215,7 @@ welcome = Welcome, {$name}, to {-brand-name}!
 			new Pattern(Null, ['~\n+~'], False),
 			new Sequence('anotation', [
 				(new Whitechars(Null, False))->setOptional(),
-				new Match(Null, ['@'], False),
+				new Match_(Null, ['@'], False),
 				new Pattern('name', ['~[a-z][a-zA-Z0-9\-]*~']),
 				new Whitechars(Null, False),
 				new Until('value', ['~\n[\t\ ]*\@[a-z][a-zA-Z0-9\-]*~']),
@@ -246,7 +246,7 @@ welcome = Welcome, {$name}, to {-brand-name}!
 
 		$parser = new Sequence('anotation', [
 				(new Whitechars(Null, False))->setOptional(),
-				new Match(Null, ['@'], False),
+				new Match_(Null, ['@'], False),
 				new Pattern('name', ['~[a-z][a-zA-Z0-9\-]*~']),
 				new Whitechars(Null, False),
 				new Until('value', ['~\n[\t\ ]*\@[a-z][a-zA-Z0-9\-]*~']),
@@ -270,7 +270,7 @@ welcome = Welcome, {$name}, to {-brand-name}!
 
 		$parser = new Many(Null, new Sequence('anotation', [
 			(new Whitechars(Null, False))->setOptional(),
-			new Match(Null, ['@'], False),
+			new Match_(Null, ['@'], False),
 			new Pattern('name', ['~[a-z][a-zA-Z0-9\-]*~']),
 			new Pattern(Null, ['~[\t ]+~'], False),
 			new Pattern('value', ['~[^\n]+~s']),
@@ -300,7 +300,7 @@ welcome = Welcome, {$name}, to {-brand-name}!
 		$parser = new Many(Null,
 			new Sequence('anotation', [
 				(new Whitechars(Null, False))->setOptional(),
-				new Match(Null, ['@'], False),
+				new Match_(Null, ['@'], False),
 				new Pattern('name', ['~[a-z][a-zA-Z0-9\-]*~']),
 				new Whitechars(Null, False),
 				new Until('value', ['~\n[\t\ ]*\@[a-z][a-zA-Z0-9\-]*~']),
@@ -335,7 +335,7 @@ welcome = Welcome, {$name}, to {-brand-name}!
 		]);
 
 		$parser = new Sequence('dict', [
-			new Match(Null, ['{'], False),
+			new Match_(Null, ['{'], False),
 			(new Whitechars(Null, False))->setOptional(),
 			new Many(Null,
 				new Sequence('pair', [
@@ -345,7 +345,7 @@ welcome = Welcome, {$name}, to {-brand-name}!
 					$value,
 				])),
 			(new Whitechars(Null, False))->setOptional(),
-			new Match(Null, ['}'], False),
+			new Match_(Null, ['}'], False),
 		]);
 		list($token, $expected) = $parser->scan($input, 0, []);
 
