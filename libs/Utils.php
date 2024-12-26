@@ -149,8 +149,8 @@ class Utils
 		if ($offset >= strlen($src)) {
 			return [False, False];
 		}
-		$startIndex = strpos($src, $startmarker, $offset);
-		$endIndex = strpos($src, $endmarker, $offset);
+		$startIndex = self::lookupUnescapedMarker($startmarker, $src, $offset);
+		$endIndex = self::lookupUnescapedMarker($endmarker, $src, $offset);
 
 		if ($startIndex !== False) {
 			$endIndex = self::lookupEndIndex($startmarker, $endmarker, $src, $startIndex + 1);
@@ -161,20 +161,35 @@ class Utils
 
 
 
+	private static function lookupUnescapedMarker($marker, $src, $offset)
+	{
+		$i = strpos($src, $marker, $offset);
+		if ($i === False) {
+			return False;
+		}
+		if ($i === 0 || ($i > 0 && $src[$i - 1] !== '\\')) {
+			return $i;
+		}
+		return self::lookupUnescapedMarker($marker, $src, $i + strlen($marker));
+	}
+
+
+
 	/**
-	 * @param string $start
-	 * @param string $end
+	 * @param string $startmarker
+	 * @param string $endmarker
 	 * @param string $src
 	 * @param int $offset
 	 * @return int<0, max>|false
 	 */
-	private static function lookupEndIndex($start, $end, $src, $offset)
+	private static function lookupEndIndex($startmarker, $endmarker, $src, $offset)
 	{
-		$startIndex = strpos($src, $start, $offset);
-		$endIndex = strpos($src, $end, $offset);
+		$startIndex = self::lookupUnescapedMarker($startmarker, $src, $offset);
+		$endIndex = self::lookupUnescapedMarker($endmarker, $src, $offset);
+
 		if ($startIndex !== False && $startIndex < $endIndex) {
-			if ($endIndex = self::lookupEndIndex($start, $end, $src, $startIndex + 1)) {
-				$endIndex = self::lookupEndIndex($start, $end, $src, $endIndex + 1);
+			if ($endIndex = self::lookupEndIndex($startmarker, $endmarker, $src, $startIndex + 1)) {
+				$endIndex = self::lookupEndIndex($startmarker, $endmarker, $src, $endIndex + 1);
 			}
 			return $endIndex;
 		}
