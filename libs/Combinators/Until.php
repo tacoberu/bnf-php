@@ -52,6 +52,7 @@ class Until implements Combinator
 	 */
 	function scan($src, $offset, array $bank)
 	{
+		$bank = Utils::addToBank($bank, $this);
 		if ($offset > strlen($src)) {
 			return [False, []];
 		}

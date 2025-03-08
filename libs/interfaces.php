@@ -12,7 +12,7 @@ interface Combinator
 
 	/**
 	 * Checks if the pattern for the current offset can be matched.
-	 * - no match = [false, [$name]]
+	 * - no match = [False, [$name]]
 	 * - match part = [False, [$name of that part]]
 	 * - successful matching of everything, we don't care about the end = [Token, []]
 	 *

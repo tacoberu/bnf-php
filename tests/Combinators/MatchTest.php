@@ -61,12 +61,18 @@ class MatchTest extends TestCase
 			': ',
 			':',
 		];
+		$def3 = [
+			',',
+			', ',
+		];
 		return [
 			[$def1, 'x1234 5 x 6', 2, '234'],
 			[$def1, 'x1234 5 x 6', 0, 'x'],
 			[$def1, 'x1234 5 x 6', 8, 'x'],
 			[$def1, 'x1234 5 X 6', 8, 'X'],
 			[$def2, '"abc": "def"', 5, ': '],
+			[$def3, 'x1234,name', 5, ','],
+			[$def3, 'x1234, name', 5, ','],
 		];
 	}
 

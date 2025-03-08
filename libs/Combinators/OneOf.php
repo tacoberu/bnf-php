@@ -68,6 +68,11 @@ class OneOf implements Combinator
 	{
 		$bank = Utils::addToBank($bank, $this);
 		foreach ($this->options as $node) {
+			if ( ! $node instanceof Ref) {
+				$bank = Utils::addToBank($bank, $node);
+			}
+		}
+		foreach ($this->options as $node) {
 			if ($node instanceof Ref) {
 				$node = $bank[$node->name];
 			}

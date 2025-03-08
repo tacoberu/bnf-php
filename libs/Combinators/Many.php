@@ -63,8 +63,9 @@ class Many implements Combinator
 	 */
 	function scan($src, $offset, array $bank)
 	{
-		$start = $offset;
 		$bank = Utils::addToBank($bank, $this);
+		$bank = Utils::addToBank($bank, $this->pattern);
+		$start = $offset;
 		$res = [];
 		$len = strlen($src);
 		$expected = [];
